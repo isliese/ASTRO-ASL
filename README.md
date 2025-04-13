@@ -108,4 +108,4 @@ This project uses the following technologies, libraries, and datasets:
 - **CNN** – Convolutional Neural Network (CNN) is a deep learning algorithm used for image classification tasks, implemented using TensorFlow and Keras.
 
 ## 📄 License
-© 2025 | Fullyhacks Team - Fullhacks @ CSUF
+© 2025 | NoName Team - Fullyhacks @ CSUF
