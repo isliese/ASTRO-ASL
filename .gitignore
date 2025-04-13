@@ -1,0 +1,8 @@
+.DS_Store
+pyvenv.cfg
+bin/
+lib/
+venv/
+asl/
+sampled_asl/
+.env
