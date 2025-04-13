@@ -113,7 +113,7 @@
 
     /* Second Section */
     .information {
-      /* (추가 스타일 필요시 여기에 삽입) */
+      /* (Add styles here if needed) */
     }
 
     /* Third Section */
@@ -124,6 +124,21 @@
       gap: 40px; 
       padding: 30px;
       border-radius: 20px;
+    }
+    
+    /* Wrapper for camera and target with label */
+    .camera-wrapper,
+    .target-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    /* Label styling */
+    .label {
+      font-size: 20px;
+      margin-bottom: 10px;
+      font-weight: bold;
     }
     
     .camera-container, .target-container {
@@ -206,6 +221,13 @@
       transition: transform 0.3s ease;
       cursor: pointer;
     }
+    
+    /* Toggle Camera Button styling */
+    #toggleCameraBtn {
+      width: 100px; /* Adjust button size as needed */
+      margin-top: 20px; /* Add space above the button */
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -243,25 +265,30 @@
 
   <!-- Third Section with Camera -->
   <div class="section" id="third-section">
-    <div id="camera-text"></div>
-    <div id="target-text"></div>
-
-    <!-- Camera + Square Box Align Box -->
+    <!-- Camera and Square with Labels -->
     <div class="camera-and-target">
-      <div class="camera-container">
-        <video id="camera" autoplay></video>
+      <div class="camera-wrapper">
+         <!-- Label above camera -->
+         <div class="label">Sign Language</div>
+         <div class="camera-container">
+           <video id="camera" autoplay></video>
+         </div>
       </div>
-      <div class="target-container">
-        <img src="{{ url_for('static', filename='target-square.png') }}" alt="Target Square" />
+      <div class="target-wrapper">
+         <!-- Label above target square -->
+         <div class="label">Transcription</div>
+         <div class="target-container">
+           <img src="{{ url_for('static', filename='target-square.png') }}" alt="Target Square" />
+         </div>
       </div>
     </div>
     
     <!-- Print prediction result -->
     <div id="prediction-result" style="color: white; font-size: 24px; margin-top: 10px;"></div>
 
-    <!-- Toggle Camera Button (이미지 클릭 시 카메라 On/Off) -->
+    <!-- Toggle Camera Button (Image click to toggle camera) -->
     <div>
-      <img id="toggleCameraBtn" src="{{ url_for('static', filename='close-button.png') }}" alt="Toggle Camera" onclick="toggleCamera()" style="cursor:pointer;" />
+      <img id="toggleCameraBtn" src="{{ url_for('static', filename='close-button.png') }}" alt="Toggle Camera" onclick="toggleCamera()" />
     </div>
   </div>
 
@@ -308,7 +335,7 @@
   
   <!-- Script Section inside body -->
   <script>
-    // Subtitle 타이핑 효과 및 play-button 활성화
+    // Typing effect for subtitle and play button activation
     const subtitleLines = [
       "Experience how this can make our space💫 better"
     ];
@@ -342,11 +369,10 @@
       thirdSection.scrollIntoView({ behavior: 'smooth' });
     });
   
-    // Toggle Camera 함수 (이미지 교체 포함)
+    // Toggle Camera function with image swap for button
     function toggleCamera() {
       const cameraContainer = document.querySelector(".camera-container");
       const toggleBtn = document.getElementById("toggleCameraBtn");
-      // cameraContainer.style.display가 "none" 또는 빈 문자열이면 카메라가 꺼진 것으로 판단
       if (cameraContainer.style.display === "none" || cameraContainer.style.display === "") {
         cameraContainer.style.display = "block";
         toggleBtn.src = "{{ url_for('static', filename='close-button.png') }}";
@@ -356,7 +382,7 @@
       }
     }
   
-    // 웹캠 접근 (영상 디스플레이)
+    // Access and display webcam stream
     navigator.mediaDevices.getUserMedia({ video: true })
       .then(stream => {
         const video = document.getElementById('camera');
@@ -367,7 +393,7 @@
       });
   </script>
   
-  <!-- Socket.IO 및 웹캠 프레임 전송 -->
+  <!-- Socket.IO and webcam frame transmission -->
   <script src="https://cdn.socket.io/4.3.2/socket.io.min.js"></script>
   <script>
     const video = document.getElementById('camera');
@@ -385,7 +411,7 @@
           context.drawImage(video, 0, 0, canvas.width, canvas.height);
           const frameData = canvas.toDataURL('image/jpeg');
           socket.emit('frame', frameData);
-        }, 200); // 0.2초 간격
+        }, 200); // every 0.2 seconds
       })
       .catch((err) => {
         console.error("Fail to access Webcam:", err);
