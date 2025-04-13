@@ -5,10 +5,18 @@ import numpy as np
 import tensorflow as tf
 import keras
 import random
-from tensorflow.keras import layers, models
+import kagglehub
+
 from sklearn.model_selection import train_test_split
 
-data_dir = './asl'
+
+# Download dataset from Kaggle
+path = kagglehub.dataset_download("ayuraj/american-sign-language-dataset")
+print("Path to dataset files:", path)
+print("Files in dataset path:", os.listdir(path))  # Debugging line
+
+# Update to match actual folder inside the dataset
+data_dir = os.path.join(path, 'asl')  # Adjust if folder name differs
 
 # Remove number data
 for i in range(0, 9):
@@ -19,7 +27,7 @@ sample_percentage = 0.005  # 0.5% of the data
 
 # Function to sample a percentage of data
 def sample_data(data_dir, sample_percentage):
-    sampled_data_dir = './sampled_asl'
+    sampled_data_dir = path
     if not os.path.exists(sampled_data_dir):
         os.makedirs(sampled_data_dir)
 

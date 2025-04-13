@@ -4,5 +4,9 @@ bin/
 lib/
 venv/
 asl/
+.vscode/
+model.keras
+model.h5
 sampled_asl/
 .env
+__pycache__/
