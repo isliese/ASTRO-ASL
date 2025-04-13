@@ -19,7 +19,7 @@ except Exception as e:
     model_loaded = False
 
 def preprocess_image(frame):
-    img = cv2.resize(frame, (200, 200))
+    img = cv2.resize(frame, (224, 224))
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     img = img / 255.0
     return np.expand_dims(img, axis=0)
