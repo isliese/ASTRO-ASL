@@ -5,6 +5,8 @@
   <title>ASTRO ASL</title>
   <!-- Google Fonts: Futuristic Style -->
   <link href="https://fonts.googleapis.com/css2?family=Orbitron&family=Rajdhani&family=Audiowide&family=Exo&family=Titillium+Web&display=swap" rel="stylesheet">
+  
+  <!-- CSS Starts -->
   <style>
     body {
       margin: 0;
@@ -17,27 +19,28 @@
     }
 
     body::before {
-  content: "";
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background-image: url("{{ url_for('static', filename='space_background.webp') }}");
-  background-size: 110% auto; 
-  background-position: 0% 0%;
-  background-repeat: repeat-x; 
-  opacity: 0.4;
-  z-index: -1;
-  animation: moveBackground 30s linear infinite;
-}
+      content: "";
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image: url("{{ url_for('static', filename='space_background.webp') }}");
+      background-size: 110% auto; 
+      background-position: 0% 0%;
+      background-repeat: repeat-x; 
+      opacity: 0.4;
+      z-index: -1;
+      animation: moveBackground 30s linear infinite;
+    }
 
-@keyframes moveBackground {
-  0% {
-    background-position: 0% 0%;
-  }
-  100% {
-    background-position: 100% 0%;
-  }
-}
-
+    @keyframes moveBackground {
+      0% {
+        background-position: 0% 0%;
+      }
+      100% {
+        background-position: 100% 0%;
+      }
+    }
+    
+    /* Section in general */
     .section {
       height: 100vh;
       display: flex;
@@ -49,6 +52,7 @@
       box-sizing: border-box;
     }
 
+    /* Divider in general */
     .divider {
       width: 100%;
       max-width: 1514px;
@@ -57,6 +61,7 @@
       margin: 0 auto;
     }
 
+    /* First Section */
     .section.hero h1, .section.hero h3 {
       transition: font-family 0.5s ease;
     }
@@ -74,6 +79,7 @@
       min-height: 5em;
     }
 
+    /* Fade in Animation */
     @keyframes fadeInUp {
       0% {
         opacity: 0;
@@ -105,10 +111,12 @@
       transform: scale(1.1);
     }
 
+    /* Second Section */
     .information {
 
     }
 
+    /* Third Section */
     .camera-and-target {
       display: flex;
       justify-content: center;
@@ -138,6 +146,33 @@
       border-radius: 50px; 
       transform: scaleX(-1);
     }
+
+    /* Fourth Section */
+    .big-title {
+      font-size: 3rem; 
+      font-weight: bold;
+      line-height: 1.2;
+    }
+
+    .profile-links {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 74px;
+      margin-top: 20px;
+    }
+
+    .profile-links img {
+      height: auto;
+      width: auto;
+      border-radius: 30%;
+      transition: transform 0.3s ease;
+      cursor: pointer;
+    }
+
+    .profile-links img:hover {
+      transform: scale(1.05);
+    }
   </style>
 </head>
 <body>
@@ -151,14 +186,16 @@
     <img id="play-button" class="play-button" src="{{ url_for('static', filename='play_button.png') }}" alt="Play Button" />
   </div>
 
+  <!-- Divider -->
   <div class="divider"></div>
 
+  <!-- Second Section -->
   <div class="section" id="second-section">
     <h1> Purpose of this project here<br>Instructions here
       </h1>
   </div>
 
-
+  <!-- Divider -->
   <div class="divider"></div>
 
   <!-- Third Section with Camera -->
@@ -177,10 +214,31 @@
   </div>
   </div>
 
+  <!-- Divider -->
   <div class="divider"></div>
 
+  <!-- Fourth Section -->
   <div class="section" id="fourth-section">
-    <h1>Developers</h1>
+    <h1 class="big-title">Developers</h1>
+    <div class="profile-links">
+      <!-- Jay -->
+      <a href="https://github.com/jay-gleeson" target="_blank">
+        <img src="{{ url_for('static', filename='profile-sample.png') }}" alt="Developer 1">
+      </a>
+      <!-- Isla -->
+      <a href="https://github.com/isliese" target="_blank">
+        <img src="{{ url_for('static', filename='profile-sample.png') }}" alt="Developer 2">
+      </a>
+      <!-- Owin -->
+      <a href="https://github.com/owinrojas" target="_blank">
+        <img src="{{ url_for('static', filename='profile-sample.png') }}" alt="Developer 3">
+      </a>
+      <!-- Iracema -->
+      <a href="https://github.com/Iracema008" target="_blank">
+        <img src="{{ url_for('static', filename='profile-sample.png') }}" alt="Developer 4">
+      </a>
+    </div>
+    <h3>Made with 🤍</h3>
   </div>
 
   <script>
