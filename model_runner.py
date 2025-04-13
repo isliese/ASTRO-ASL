@@ -4,7 +4,7 @@ from tensorflow.keras.preprocessing.image import load_img, img_to_array
 import json
 
 # Load the model
-model = tf.keras.models.load_model('asl_model.h5')
+model = tf.keras.models.load_model('model.keras')
 
 # Load label map
 with open('label_map.json', 'r') as f:
