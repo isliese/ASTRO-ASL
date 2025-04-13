@@ -5,7 +5,6 @@ import numpy as np
 import tensorflow as tf
 import keras
 import random
-from tensorflow.keras import layers, models
 from sklearn.model_selection import train_test_split
 
 data_dir = './asl'
