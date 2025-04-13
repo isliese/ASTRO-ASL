@@ -4,12 +4,11 @@ import cv2
 import numpy as np
 import base64
 import tensorflow as tf
-import mediapipe as mp  # Import MediaPipe for hand detection
+import mediapipe as mp 
 
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins='*')
-
-# Load model
+# download keras model
 try:
     model = tf.keras.models.load_model('model.keras')
     model_loaded = True
@@ -18,7 +17,7 @@ except Exception as e:
     print(f"Error loading model: {e}")
     model_loaded = False
 
-# Initialize MediaPipe Hand model
+# mediapiple hand model
 mp_hands = mp.solutions.hands
 hands = mp_hands.Hands(min_detection_confidence=0.7, min_tracking_confidence=0.7)
 
@@ -66,7 +65,7 @@ def crop_hand_from_frame(frame):
             cropped_hand = frame[y1:y2, x1:x2]
             return cropped_hand
 
-    return frame  # If no hands are detected, return the original frame
+    return frame  # check if hands are detected, else,  return the original frame
 
 @app.route('/')
 def index():
@@ -87,7 +86,7 @@ def handle_frame(data):
             print("Received empty data")
             return
 
-        # Remove base64 header (e.g., data:image/jpeg;base64,...)
+        # get rid of base64 header ermmm (e.g., data:image/jpeg;base64,...)
         header, encoded = data.split(',', 1)
         decoded = base64.b64decode(encoded)
         nparr = np.frombuffer(decoded, np.uint8)
@@ -97,13 +96,13 @@ def handle_frame(data):
             print("Failed to decode image")
             return
 
-        # Crop the hand region
+        # crop image so it only shows hand
         cropped_frame = crop_hand_from_frame(frame)
 
-        # Make prediction
+        # make the prediction
         letter, confidence = predict_gesture(cropped_frame)
 
-        # Send prediction result
+        # show result to user
         socketio.emit('prediction', {
             'letter': letter,
             'confidence': round(confidence * 100, 2)  # Send as percentage
