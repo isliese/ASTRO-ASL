@@ -122,7 +122,6 @@
       justify-content: center;
       align-items: center;
       gap: 40px; 
-      background: rgba(0, 0, 0, 0.5);
       padding: 30px;
       border-radius: 20px;
     }
@@ -278,7 +277,6 @@
     </h3>
   </div>
 
-
   <!-- Divider -->
   <div class="divider"></div>
 
@@ -296,15 +294,18 @@
       <img src="{{ url_for('static', filename='target-square.png') }}" alt="Target Square" />
     </div>
   </div>
+    
+    <!-- Print prediction result -->
+    <div id="prediction-result" style="color: white; font-size: 24px; margin-top: 10px;"></div>
   </div>
-
+  
   <!-- Divider -->
   <div class="divider"></div>
 
   <!-- Fourth Section -->
   <div class="section" id="fourth-section">
     <h1 class="big-title">Meet the Team</h1>
-    <!--<h2 style="margin-bottom: 2rem">Meet the Team</h2>-->
+
     <div class="profile-links">
       <!-- Jay -->
       <div class="profile jay-profile">
@@ -337,6 +338,8 @@
     </div>
     <h3>Made with 🤍</h3>
   </div>
+  </body>
+
 
   <script>
     // Text setting
@@ -384,5 +387,35 @@
         console.error("Camera access error:", error);
       });
   </script>
+  <!-- Connect to Socket.IO and send webcam frame -->
+  <script src="https://cdn.socket.io/4.3.2/socket.io.min.js"></script>
+  <script>
+    const video = document.getElementById('camera');
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    const socket = io();
+
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then((stream) => {
+        video.srcObject = stream;
+        video.play();
+        setInterval(() => {
+          canvas.width = video.videoWidth;
+          canvas.height = video.videoHeight;
+          context.drawImage(video, 0, 0, canvas.width, canvas.height);
+          const frameData = canvas.toDataURL('image/jpeg');
+          socket.emit('frame', frameData);
+        }, 200); // every 0.2 sec
+      })
+      .catch((err) => {
+        console.error("Fail to access Webcam:", err);
+      });
+
+    socket.on('prediction', (data) => {
+      const { letter, confidence } = data;
+      document.getElementById('prediction-result').innerText = `Prediction: ${letter} (${confidence}%)`;
+    });
+  </script>
+
 </body>
 </html>
