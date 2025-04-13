@@ -7,15 +7,16 @@ camera = cv2.VideoCapture(0)
 
 def gen_frames():
     while True:
+        # start capturing frames
         success, frame = camera.read()
         if not success:
             break
         else:
-            # Convert the frame to JPEG format
+            # converts opencv image to jpeg for html page
             ret, buffer = cv2.imencode('.jpg', frame)
             frame = buffer.tobytes()
 
-            # Return frame as part of multipart HTTP response
+            # stream frames as live video
             yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
@@ -25,6 +26,7 @@ def index():
 
 @app.route('/video_feed')
 def video_feed():
+    # streams frames to buffer
     return Response(gen_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 # Run the app
