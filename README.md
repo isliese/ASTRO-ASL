@@ -58,8 +58,14 @@ Sound doesn’t travel in the vacuum of space, making traditional spoken communi
    # Ensure Python > 3.10 < 3.11 is installed
    pip install -r requirements.txt
    ```
-
-5. **Run Application**:
+4. **Train Model**
+   ```bash
+   # Using your own dataset, you can train your model using:
+   # Only tested using dataset below. May require customization
+   # for custom datasets.
+   python training_model.py
+   ```
+6. **Run Application**:
    ```bash
    python app.py # for web UI and transcriber
    ```

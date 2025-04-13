@@ -4,11 +4,8 @@ import cv2
 import numpy as np
 import tensorflow as tf
 import keras
-import random
 import kagglehub
-
 from sklearn.model_selection import train_test_split
-
 
 # Download dataset from Kaggle
 path = kagglehub.dataset_download("ayuraj/american-sign-language-dataset")
@@ -107,7 +104,6 @@ images, labels, label_map = load_data(data_dir, add_noise=True)
 
 # Normalize pixel values to be between 0 and 1
 images = images / 255.0
-
 
 # One-hot encode the labels
 labels = keras.utils.to_categorical(labels)
