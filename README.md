@@ -20,6 +20,7 @@ Sound doesn’t travel in the vacuum of space, making traditional spoken communi
 
 > **ASTRO ASL provides a hands-on solution to a soundless environment.**
 
+
 ## ✨ Features  
 
 | Feature           | Description                                                  |
@@ -100,6 +101,9 @@ This project uses the following technologies, libraries, and datasets:
 - **HTML**
 - **CSS**
 - **JS**
+
+### Slideshow:
+ [Astro ASL Slideshow](https://docs.google.com/presentation/d/12n0f3zPviuIEXO6e-eKsDheuZ6P-uuRe7ssC2XmmU9Y/edit?usp=sharing)
 
 ### Libraries:
 - **Flask** – A micro web framework for Python.
