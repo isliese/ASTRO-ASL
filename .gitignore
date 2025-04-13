@@ -10,3 +10,4 @@ model.h5
 sampled_asl/
 .env
 __pycache__/
+captures/

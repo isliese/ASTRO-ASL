@@ -5,8 +5,6 @@
   <title>ASTRO ASL</title>
   <!-- Google Fonts: Futuristic Style -->
   <link href="https://fonts.googleapis.com/css2?family=Orbitron&family=Rajdhani&family=Audiowide&family=Exo&family=Titillium+Web&display=swap" rel="stylesheet">
-  
-  <!-- CSS Starts -->
   <style>
     body {
       margin: 0;
@@ -17,7 +15,6 @@
       overflow-x: hidden;
       scroll-behavior: smooth;
     }
-
     body::before {
       content: "";
       position: fixed;
@@ -25,21 +22,15 @@
       background-image: url("{{ url_for('static', filename='space_background.webp') }}");
       background-size: 110% auto;
       background-position: 0% 0%;
-      background-repeat: repeat-x; 
+      background-repeat: repeat-x;
       opacity: 0.4;
       z-index: -1;
       animation: moveBackground 30s linear infinite;
     }
-
     @keyframes moveBackground {
-      0% {
-        background-position: 0% 0%;
-      }
-      100% {
-        background-position: 100% 0%;
-      }
+      0% { background-position: 0% 0%; }
+      100% { background-position: 100% 0%; }
     }
-    
     /* Section styles */
     .section {
       height: 100vh;
@@ -51,7 +42,6 @@
       padding: 20px;
       box-sizing: border-box;
     }
-
     /* Divider style */
     .divider {
       width: 100%;
@@ -60,7 +50,6 @@
       background: linear-gradient(180deg, rgba(11, 4, 30, 0.6) 11.06%, rgba(1, 0, 33, 0) 100%);
       margin: 0 auto;
     }
-
     /* First Section */
     .section.hero h1, .section.hero h3 {
       transition: font-family 0.5s ease;
@@ -76,8 +65,6 @@
       border-radius: 10px;
       min-height: 5em;
     }
-
-    /* Fade-in animation */
     @keyframes fadeInUp {
       0% { opacity: 0; transform: translateY(20px); }
       100% { opacity: 1; transform: translateY(0); }
@@ -88,33 +75,24 @@
       margin-top: -50px;
       cursor: pointer;
       transition: transform 0.3s ease;
-      opacity: 0; 
-      pointer-events: none; 
-      display: block; 
+      opacity: 0;
+      pointer-events: none;
+      display: block;
     }
     .play-button.fade-in {
       animation: fadeInUp 1s ease-out forwards;
       pointer-events: auto;
     }
-    .play-button:hover {
-      transform: scale(1.1);
-    }
-
-    /* Second Section */
-    .information {
-      /* (Add additional styles if needed) */
-    }
-
+    .play-button:hover { transform: scale(1.1); }
     /* Third Section */
     .camera-and-target {
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 40px; 
+      gap: 40px;
       padding: 30px;
       border-radius: 20px;
     }
-    
     /* Wrapper for camera and target with label */
     .camera-wrapper,
     .target-wrapper {
@@ -122,19 +100,17 @@
       flex-direction: column;
       align-items: center;
     }
-    
     /* Label styling */
     .label {
       font-size: 20px;
       margin-bottom: 10px;
       font-weight: bold;
     }
-    
     .camera-container, .target-container {
       padding: 0;
       margin: 0;
     }
-    /* Ensure video displays as a black placeholder initially */
+    /* Video element with black placeholder initially */
     video {
       width: 640px;
       height: 480px;
@@ -143,7 +119,7 @@
       transform: scaleX(-1);
       background-color: black;
     }
-    /* Target container with overlayed prediction result */
+    /* Target container with overlay for prediction result and confidence footer */
     .target-container {
       position: relative;
       width: 730px;
@@ -152,23 +128,50 @@
     .target-container img {
       width: 100%;
       height: 100%;
-      border: none; 
+      border: none;
       border-radius: 0;
     }
-    #prediction-result {
+    /* Overlay for showing prediction result and confidence */
+    .prediction-overlay {
       position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      color: white;
-      font-size: 24px;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
     }
-
-    /* Fourth Section */
+    #prediction-result {
+      font-size: 32px;
+      font-weight: bold;
+    }
+    #prediction-confidence {
+      position: absolute;
+      bottom: 10px;
+      font-size: 20px;
+    }
+    /* Toggle Camera Button styling */
+    #toggleCameraBtn {
+      width: 100px; /* Button size */
+      margin-top: 20px; /* Space above button */
+      cursor: pointer;
+    }
+    /* Fourth Section (Team Profiles) */
     .big-title {
-      font-size: 3rem; 
+      font-size: 3rem;
       font-weight: bold;
       line-height: 1.2;
+    }
+    .profile-links {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-top: 20px;
     }
     .profile {
       position: relative;
@@ -182,7 +185,7 @@
       border-radius: 30%;
       transition: transform 0.3s ease, filter 0.3s ease;
     }
-    .profile .overlay-text {
+    .overlay-text {
       position: absolute;
       top: 50%;
       left: 50%;
@@ -195,6 +198,7 @@
       opacity: 0;
       transition: opacity 0.3s ease;
       pointer-events: none;
+      text-align: center;
     }
     .profile:hover img {
       filter: grayscale(100%);
@@ -203,31 +207,9 @@
     .profile:hover .overlay-text {
       opacity: 1;
     }
-    .profile-links {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 74px;
-      margin-top: 20px;
-    }
-    .profile-links img {
-      height: auto;
-      width: auto;
-      border-radius: 30%;
-      transition: transform 0.3s ease;
-      cursor: pointer;
-    }
-    
-    /* Toggle Camera Button styling */
-    #toggleCameraBtn {
-      width: 100px; /* Adjust button size as needed */
-      margin-top: 20px; /* Add space above the button */
-      cursor: pointer;
-    }
   </style>
 </head>
 <body>
-
   <!-- First Section -->
   <div class="section hero">
     <img src="{{ url_for('static', filename='title.png') }}"
@@ -236,33 +218,23 @@
     <h3 id="subtitle"></h3>
     <img id="play-button" class="play-button" src="{{ url_for('static', filename='play_button.png') }}" alt="Play Button" />
   </div>
-
   <!-- Divider -->
   <div class="divider"></div>
-
   <!-- Second Section -->
   <div class="section" id="second-section">
-    <h1>
-      Purpose of Astro ASL
-      <br />
-    </h1>
-    <h2>
-      No sound in space. No problem. American Sign Language is redefining
-      astronaut communication.
-    </h2>
+    <h1>Purpose of Astro ASL<br /></h1>
+    <h2>No sound in space. No problem. American Sign Language is redefining astronaut communication.</h2>
     <h3>
-      In the vacuum of space, sound can't travel, and ASL offers a silent, efficient solution. Astro ASL demonstrates how sign language enables clear communication between astronauts. Our platform uses a trained machine learning model to detect ASL signs in real time through webcam input. Powered by deep learning and computer vision, the system interprets gestures accurately and instantly, offering a quiet, intuitive way to communicate in space.
+      In the vacuum of space, sound can't travel, and ASL offers a silent, efficient solution. Astro ASL demonstrates how sign language enables clear communication between astronauts.
+      Our platform uses a trained machine learning model to detect ASL signs in real time through webcam input. Powered by deep learning and computer vision, the system interprets gestures accurately and instantly.
     </h3>
   </div>
-
   <!-- Divider -->
   <div class="divider"></div>
-
   <!-- Third Section with Camera and Target -->
   <div class="section" id="third-section">
-    <!-- Camera and Target with Labels -->
     <div class="camera-and-target">
-      <div class="camera-wrapper" style="display: flex;">
+      <div class="camera-wrapper" style="display: none;">
          <!-- Label above camera -->
          <div class="label">Sign Language</div>
          <div class="camera-container">
@@ -274,49 +246,44 @@
          <div class="label">Transcription</div>
          <div class="target-container">
            <img src="{{ url_for('static', filename='target-square.png') }}" alt="Target Square" />
-           <div id="prediction-result"></div>
+           <div class="prediction-overlay">
+             <div id="prediction-result"></div>
+             <div id="prediction-confidence"></div>
+           </div>
          </div>
       </div>
     </div>
-    
-    <!-- Toggle Camera Button (Image click toggles camera and label visibility) -->
+    <!-- Toggle Camera Button (click to start/stop camera capture) -->
     <div>
-      <!-- Initially show start-button icon -->
       <img id="toggleCameraBtn" src="{{ url_for('static', filename='start-button.png') }}" alt="Toggle Camera" onclick="toggleCamera()" />
     </div>
   </div>
-
   <!-- Divider -->
   <div class="divider"></div>
-  
-  <!-- Fourth Section -->
+  <!-- Fourth Section (Team Profiles) -->
   <div class="section" id="fourth-section">
     <br><br>
     <h1 class="big-title">Meet the Team</h1>
     <div class="profile-links">
-      <!-- Jay -->
-      <div class="profile jay-profile">
+      <div class="profile">
         <a href="https://github.com/jay-gleeson" target="_blank">
           <img src="{{ url_for('static', filename='profile-sample.png') }}" alt="Developer 1">
           <div class="overlay-text">Jay - AI/Backend<br><br>Check out Jay's github</div>
         </a>
       </div>
-      <!-- Isla -->
-      <div class="profile isla-profile">
+      <div class="profile">
         <a href="https://github.com/isliese" target="_blank">
           <img src="{{ url_for('static', filename='profile-sample.png') }}" alt="Developer 2">
           <div class="overlay-text">Isla - Design/Frontend<br><br>Check out Isla's github</div>
         </a>
       </div>
-      <!-- Owin -->
-      <div class="profile owin-profile">
+      <div class="profile">
         <a href="https://github.com/owinrojas" target="_blank">
           <img src="{{ url_for('static', filename='profile-sample.png') }}" alt="Developer 3">
           <div class="overlay-text">Owin - AI/Research<br><br>Check out Owin's github</div>
         </a>
       </div>
-      <!-- Iracema -->
-      <div class="profile iracema-profile">
+      <div class="profile">
         <a href="https://github.com/Iracema008" target="_blank">
           <img src="{{ url_for('static', filename='profile-sample.png') }}" alt="Developer 4">
           <div class="overlay-text">Iracema - Frontend<br><br>Check out Iracema's github</div>
@@ -325,8 +292,8 @@
     </div>
     <h3>Made with 🤍</h3>
   </div>
-  
   <!-- Script Section -->
+  <script src="https://cdn.socket.io/4.3.2/socket.io.min.js"></script>
   <script>
     // Typing effect for subtitle and play button activation
     const subtitleLines = [
@@ -357,35 +324,35 @@
       thirdSection.scrollIntoView({ behavior: 'smooth' });
     });
   
-    // Global variables for camera control and streaming
+    // Global variables for camera control and sentence accumulation
     let cameraOn = false;
     let currentStream = null;
-    let streamingInterval = null;
+    let captureInterval = null;
+    let sentence = "";
     const video = document.getElementById('camera');
     const canvas = document.createElement('canvas');
     const context = canvas.getContext('2d');
     const socket = io();
   
-    // Toggle Camera function with start/close behavior
+    // Toggle Camera function: start (capture every 3 sec) / stop the camera
     function toggleCamera() {
       const cameraWrapper = document.querySelector(".camera-wrapper");
       const toggleBtn = document.getElementById("toggleCameraBtn");
       if (!cameraOn) {
-        // Turn camera on: ensure camera area is visible and start streaming
+        // Turn camera on: show camera wrapper and start capturing frames every 3 sec
         cameraWrapper.style.display = "flex";
         navigator.mediaDevices.getUserMedia({ video: true })
           .then(stream => {
             currentStream = stream;
             video.srcObject = stream;
             video.play();
-            // Start sending frames every 200 ms via socket
-            streamingInterval = setInterval(() => {
+            captureInterval = setInterval(() => {
               canvas.width = video.videoWidth;
               canvas.height = video.videoHeight;
               context.drawImage(video, 0, 0, canvas.width, canvas.height);
               const frameData = canvas.toDataURL('image/jpeg');
               socket.emit('frame', frameData);
-            }, 200);
+            }, 3000);  // capture every 3 seconds
           })
           .catch(error => {
             console.error("Camera access error:", error);
@@ -393,14 +360,14 @@
         toggleBtn.src = "{{ url_for('static', filename='close-button.png') }}";
         cameraOn = true;
       } else {
-        // Turn camera off: stop streaming and hide the camera area
+        // Turn camera off: stop stream and clear capture interval, hide camera wrapper
         if (currentStream) {
           currentStream.getTracks().forEach(track => track.stop());
           currentStream = null;
         }
-        if (streamingInterval) {
-          clearInterval(streamingInterval);
-          streamingInterval = null;
+        if (captureInterval) {
+          clearInterval(captureInterval);
+          captureInterval = null;
         }
         video.srcObject = null;
         cameraWrapper.style.display = "none";
@@ -409,12 +376,14 @@
       }
     }
   
-    // Socket listener for prediction results; update prediction result overlay
+    // Listen for prediction results and accumulate letters; update confidence footer as well
     socket.on('prediction', (data) => {
       const { letter, confidence } = data;
-      document.getElementById('prediction-result').innerText = `Prediction: ${letter} (${confidence}%)`;
+      // Append the new predicted letter to the sentence
+      sentence += letter;
+      document.getElementById('prediction-result').innerText = sentence;
+      document.getElementById('prediction-confidence').innerText = "Confidence: " + confidence + "%";
     });
   </script>
-  
 </body>
 </html>
