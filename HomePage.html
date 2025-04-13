@@ -47,4 +47,346 @@
       width: 100%;
       max-width: 1514px;
       height: 292px;
-      background: linear-gradient(180deg, rgba(11, 4, 30, 0.6) 11.06%, rgba(
+      background: linear-gradient(180deg, rgba(11, 4, 30, 0.6) 11.06%, rgba(1, 0, 33, 0) 100%);
+      margin: 0 auto;
+    }
+    /* First Section */
+    .section.hero h1, .section.hero h3 {
+      transition: font-family 0.5s ease;
+    }
+    .section.hero h1 {
+      font-size: 4rem;
+      margin-bottom: 20px;
+    }
+    .section.hero h3 {
+      font-size: 1.5rem;
+      line-height: 1.6;
+      padding: 10px 20px;
+      border-radius: 10px;
+      min-height: 5em;
+    }
+    @keyframes fadeInUp {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    .play-button {
+      width: 150px;
+      height: auto;
+      margin-top: -50px;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+      opacity: 0;
+      pointer-events: none;
+      display: block;
+    }
+    .play-button.fade-in {
+      animation: fadeInUp 1s ease-out forwards;
+      pointer-events: auto;
+    }
+    .play-button:hover { transform: scale(1.1); }
+    /* Third Section */
+    .camera-and-target {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 40px;
+      padding: 30px;
+      border-radius: 20px;
+    }
+    /* Wrapper for camera and target with label */
+    .camera-wrapper,
+    .target-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    /* Label styling */
+    .label {
+      font-size: 20px;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+    .camera-container, .target-container {
+      padding: 0;
+      margin: 0;
+    }
+    /* Video element with black placeholder initially */
+    video {
+      width: 640px;
+      height: 480px;
+      border: none;
+      border-radius: 50px;
+      transform: scaleX(-1);
+      background-color: black;
+    }
+    /* Target container with prediction overlay and confidence footer */
+    .target-container {
+      position: relative;
+      width: 730px;
+      height: 470px;
+    }
+    .target-container img {
+      width: 100%;
+      height: 100%;
+      border: none;
+      border-radius: 0;
+      position: relative;
+      z-index: 0;
+    }
+    /* Overlay for prediction result and footer */
+    .prediction-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    #prediction-result {
+      font-size: 32px;
+      font-weight: bold;
+    }
+    #prediction-confidence {
+      position: absolute;
+      bottom: 10px;
+      font-size: 20px;
+    }
+    /* Toggle Camera Button styling */
+    #toggleCameraBtn {
+      width: 100px; /* Button size */
+      margin-top: 20px; /* Space above button */
+      cursor: pointer;
+    }
+    /* Fourth Section (Team Profiles) */
+    .big-title {
+      font-size: 3rem;
+      font-weight: bold;
+      line-height: 1.2;
+    }
+    .profile-links {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+    .profile {
+      position: relative;
+      display: inline-block;
+      overflow: hidden;
+    }
+    .profile img {
+      display: block;
+      width: 200px;
+      height: auto;
+      border-radius: 30%;
+      transition: transform 0.3s ease, filter 0.3s ease;
+    }
+    .overlay-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.1rem;
+      font-weight: bold;
+      text-shadow: 2px 2px 8px black;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+      text-align: center;
+    }
+    .profile:hover img {
+      filter: grayscale(100%);
+      transform: scale(1.05);
+    }
+    .profile:hover .overlay-text {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <!-- First Section -->
+  <div class="section hero">
+    <img src="{{ url_for('static', filename='title.png') }}"
+         alt="Welcome Title"
+         style="display: block; margin: 0 auto; width: 65%; height: auto;" />
+    <h3 id="subtitle"></h3>
+    <img id="play-button" class="play-button" src="{{ url_for('static', filename='play_button.png') }}" alt="Play Button" />
+  </div>
+  <!-- Divider -->
+  <div class="divider"></div>
+  <!-- Second Section -->
+  <div class="section" id="second-section">
+    <h1>Purpose of Astro ASL<br /></h1>
+    <h2>No sound in space. No problem. American Sign Language is redefining astronaut communication.</h2>
+    <h3>
+      In the vacuum of space, sound can't travel, and ASL offers a silent, efficient solution. Astro ASL demonstrates how sign language enables clear communication between astronauts.
+      Our platform uses a trained machine learning model to detect ASL signs in real time through webcam input. Powered by deep learning and computer vision, the system interprets gestures accurately and instantly.
+    </h3>
+  </div>
+  <!-- Divider -->
+  <div class="divider"></div>
+  <!-- Third Section with Camera and Target -->
+  <div class="section" id="third-section">
+    <div class="camera-and-target">
+      <div class="camera-wrapper" style="display: none;">
+         <!-- Label above camera -->
+         <div class="label">Sign Language</div>
+         <div class="camera-container">
+           <video id="camera" autoplay></video>
+         </div>
+      </div>
+      <div class="target-wrapper">
+         <!-- Label above target square -->
+         <div class="label">Transcription</div>
+         <div class="target-container">
+           <img src="{{ url_for('static', filename='target-square.png') }}" alt="Target Square" />
+           <div class="prediction-overlay">
+             <div id="prediction-result"></div>
+             <div id="prediction-confidence"></div>
+           </div>
+         </div>
+      </div>
+    </div>
+    <!-- Toggle Camera Button -->
+    <div>
+      <img id="toggleCameraBtn" src="{{ url_for('static', filename='start-button.png') }}" alt="Toggle Camera" onclick="toggleCamera()" />
+    </div>
+  </div>
+  <!-- Divider -->
+  <div class="divider"></div>
+  <!-- Fourth Section (Team Profiles) -->
+  <div class="section" id="fourth-section">
+    <br><br>
+    <h1 class="big-title">Meet the Team</h1>
+    <div class="profile-links">
+      <div class="profile">
+        <a href="https://github.com/jay-gleeson" target="_blank">
+          <img src="{{ url_for('static', filename='profile-sample.png') }}" alt="Developer 1">
+          <div class="overlay-text">Jay - AI/Backend<br><br>Check out Jay's github</div>
+        </a>
+      </div>
+      <div class="profile">
+        <a href="https://github.com/isliese" target="_blank">
+          <img src="{{ url_for('static', filename='profile-sample.png') }}" alt="Developer 2">
+          <div class="overlay-text">Isla - Design/Frontend<br><br>Check out Isla's github</div>
+        </a>
+      </div>
+      <div class="profile">
+        <a href="https://github.com/owinrojas" target="_blank">
+          <img src="{{ url_for('static', filename='profile-sample.png') }}" alt="Developer 3">
+          <div class="overlay-text">Owin - AI/Research<br><br>Check out Owin's github</div>
+        </a>
+      </div>
+      <div class="profile">
+        <a href="https://github.com/Iracema008" target="_blank">
+          <img src="{{ url_for('static', filename='profile-sample.png') }}" alt="Developer 4">
+          <div class="overlay-text">Iracema - Frontend<br><br>Check out Iracema's github</div>
+        </a>
+      </div>
+    </div>
+    <h3>Made with 🤍</h3>
+  </div>
+  <!-- Script Section -->
+  <script src="https://cdn.socket.io/4.3.2/socket.io.min.js"></script>
+  <script>
+    // Typing effect for subtitle and play button activation
+    const subtitleLines = [
+      "Experience how this can make our space💫 better"
+    ];
+    const subtitleElement = document.getElementById("subtitle");
+    const playButton = document.getElementById("play-button");
+    let subtitleIndex = 0;
+    let subtitleLineIndex = 0;
+    function typeSubtitle() {
+      if (subtitleLineIndex < subtitleLines.length) {
+        if (subtitleIndex < subtitleLines[subtitleLineIndex].length) {
+          subtitleElement.innerHTML += subtitleLines[subtitleLineIndex].charAt(subtitleIndex++);
+          setTimeout(typeSubtitle, 60);
+        } else {
+          subtitleElement.innerHTML += "<br>";
+          subtitleLineIndex++;
+          subtitleIndex = 0;
+          setTimeout(typeSubtitle, 500);
+        }
+      } else {
+        playButton.classList.add('fade-in');
+      }
+    }
+    typeSubtitle();
+    playButton.addEventListener('click', function () {
+      const thirdSection = document.getElementById('third-section');
+      thirdSection.scrollIntoView({ behavior: 'smooth' });
+    });
+  
+    // Global variables for camera control and sentence accumulation
+    let cameraOn = false;
+    let currentStream = null;
+    let captureInterval = null;
+    let sentence = "";
+    const video = document.getElementById('camera');
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    const socket = io();
+  
+    // Toggle Camera function: start (capture every 3 sec) / stop the camera
+    function toggleCamera() {
+      const cameraWrapper = document.querySelector(".camera-wrapper");
+      const toggleBtn = document.getElementById("toggleCameraBtn");
+      if (!cameraOn) {
+        // Turn camera on: show camera wrapper and start capturing frames every 3 sec
+        cameraWrapper.style.display = "flex";
+        navigator.mediaDevices.getUserMedia({ video: true })
+          .then(stream => {
+            currentStream = stream;
+            video.srcObject = stream;
+            video.play();
+            captureInterval = setInterval(() => {
+              canvas.width = video.videoWidth;
+              canvas.height = video.videoHeight;
+              context.drawImage(video, 0, 0, canvas.width, canvas.height);
+              const frameData = canvas.toDataURL('image/jpeg');
+              socket.emit('frame', frameData);
+            }, 3000);  // capture every 3 seconds
+          })
+          .catch(error => {
+            console.error("Camera access error:", error);
+          });
+        toggleBtn.src = "{{ url_for('static', filename='close-button.png') }}";
+        cameraOn = true;
+      } else {
+        // Turn camera off: stop stream and clear capture interval, hide camera wrapper
+        if (currentStream) {
+          currentStream.getTracks().forEach(track => track.stop());
+          currentStream = null;
+        }
+        if (captureInterval) {
+          clearInterval(captureInterval);
+          captureInterval = null;
+        }
+        video.srcObject = null;
+        cameraWrapper.style.display = "none";
+        toggleBtn.src = "{{ url_for('static', filename='start-button.png') }}";
+        cameraOn = false;
+      }
+    }
+  
+    // Listen for prediction results and update transcription and confidence
+    socket.on('prediction', (data) => {
+      const { letter, confidence } = data;
+      // Append the new predicted letter to the sentence
+      sentence += letter;
+      document.getElementById('prediction-result').innerText = sentence;
+      document.getElementById('prediction-confidence').innerText = "Confidence: " + confidence + "%";
+    });
+  </script>
+</body>
+</html>
