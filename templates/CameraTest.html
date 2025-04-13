@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>Welcome to _____</title>
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron&family=Press+Start+2P&family=Fira+Code&family=Rubik+Mono+One&display=swap" rel="stylesheet">
+  <!-- Google Fonts: Futuristic Style -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron&family=Rajdhani&family=Audiowide&family=Exo&family=Titillium+Web&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
@@ -26,7 +26,7 @@
       opacity: 0.4;
       z-index: -1;
     }
-
+    
     .section {
       height: 100vh;
       display: flex;
@@ -42,9 +42,11 @@
       width: 100%;
       max-width: 1514px;
       height: 292px;
-      background: linear-gradient(180deg, #0B041E 11.06%, rgba(1, 0, 33, 0) 100%);
+      background: linear-gradient(180deg, rgba(11, 4, 30, 0.6) 11.06%, rgba(1, 0, 33, 0) 100%);
       margin: 0 auto;
     }
+
+
 
     .section.hero h1, .section.hero h3 {
       transition: font-family 0.5s ease;
@@ -81,7 +83,7 @@
   </style>
 </head>
 <body>
-  <!-- First Screen -->
+  <!-- First Section -->
   <div class="section hero">
     <h1 id="title"></h1>
     <h3 id="subtitle"></h3>
@@ -89,7 +91,7 @@
 
   <div class="divider"></div>
 
-  <!-- Screen after scrolling -->
+  <!-- Section with Camera -->
   <div class="section">
     <div class="camera-container">
       <video id="camera" autoplay></video>
@@ -97,7 +99,7 @@
   </div>
 
   <script>
-    // Typing animation setup
+    // Text content for typing animation
     const titleText = "Welcome to _____";
     const subtitleLines = [
       "Give application access",
@@ -112,18 +114,18 @@
     let subtitleIndex = 0;
     let subtitleLineIndex = 0;
 
-    // Function to type the title one character at a time
+    // Typing the title character by character
     function typeTitle() {
       if (titleIndex < titleText.length) {
         titleElement.textContent += titleText.charAt(titleIndex++);
         setTimeout(typeTitle, 80);
       } else {
-        // When title typing is complete, start subtitle typing
+        // After title is done, start typing the subtitle
         typeSubtitle();
       }
     }
 
-    // Function to type subtitle lines one by one
+    // Typing the subtitle line by line
     function typeSubtitle() {
       if (subtitleLineIndex < subtitleLines.length) {
         if (subtitleIndex < subtitleLines[subtitleLineIndex].length) {
@@ -136,20 +138,21 @@
           setTimeout(typeSubtitle, 500);
         }
       } else {
-        // Start changing font only after all typing is done
+        // Start changing fonts after subtitle typing is done
         startFontCycle();
       }
     }
 
-    // List of fonts to cycle through
+    // Futuristic font list
     const fonts = [
       "Orbitron, sans-serif",
-      "'Press Start 2P', cursive",
-      "'Fira Code', monospace",
-      "'Rubik Mono One', sans-serif"
+      "'Rajdhani', sans-serif",
+      "'Audiowide', cursive",
+      "'Exo', sans-serif",
+      "'Titillium Web', sans-serif"
     ];
 
-    // Function to randomly change font of the title every 1 second
+    // Start changing fonts at intervals
     function startFontCycle() {
       setInterval(() => {
         const randomFont = fonts[Math.floor(Math.random() * fonts.length)];
@@ -157,10 +160,10 @@
       }, 1000);
     }
 
-    // Start typing the title on page load
+    // Start title typing on page load
     typeTitle();
 
-    // Enable camera
+    // Enable and display user's camera
     navigator.mediaDevices.getUserMedia({ video: true })
       .then(stream => {
         const video = document.getElementById('camera');
