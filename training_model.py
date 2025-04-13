@@ -1,12 +1,10 @@
-# import necessary libraries
+# Import necessary libraries
 import os
 import cv2
 import numpy as np
 import tensorflow as tf
 import keras
 import kagglehub
-
-from tensorflow.keras import layers, models
 from sklearn.model_selection import train_test_split
 
 # Download dataset from Kaggle
@@ -18,7 +16,7 @@ print("Files in dataset path:", os.listdir(path))  # Debugging line
 data_dir = os.path.join(path, 'asl')  # Adjust if folder name differs
 
 # Define the percentage of data to sample
-sample_percentage = 0.01  # 10% of the data
+sample_percentage = 0.10  # 10% of the data
 
 # Function to sample a percentage of data
 def sample_data(data_dir, sample_percentage):
@@ -55,6 +53,24 @@ if not os.path.exists(data_dir):
     print(f"Data directory '{data_dir}' does not exist.")
     exit()
 
+# Function to add salt and pepper noise
+def add_salt_and_pepper_noise(image, salt_prob=0.02, pepper_prob=0.02):
+    noisy_image = image.copy()
+    total_pixels = noisy_image.size
+
+    # Salt noise
+    num_salt = int(total_pixels * salt_prob)
+    salt_coords = [np.random.randint(0, i - 1, num_salt) for i in noisy_image.shape]
+    noisy_image[salt_coords[0], salt_coords[1], :] = 1  # Set salt to 1 (white)
+
+    # Pepper noise
+    num_pepper = int(total_pixels * pepper_prob)
+    pepper_coords = [np.random.randint(0, i - 1, num_pepper) for i in noisy_image.shape]
+    noisy_image[pepper_coords[0], pepper_coords[1], :] = 0  # Set pepper to 0 (black)
+
+    return noisy_image
+
+# Function to load data and apply noise
 def load_data(data_dir):
     images = []
     labels = []
@@ -73,13 +89,12 @@ def load_data(data_dir):
                     img = cv2.imread(img_path)
                     img = cv2.resize(img, (224, 224))  # Resize image to 224x224
 
+                    # Add salt and pepper noise to the image
+                    img = add_salt_and_pepper_noise(img)
+
                     # Extract the label (first letter of the filename)
                     label = img_name[0].lower()
 
-                    # Convert label to integer if not already mapped
-                    if label not in label_map:
-                        label_map[label] = len(label_map)
-                    
                     # Convert label to integer if not already mapped
                     if label not in label_map:
                         label_map[label] = len(label_map)
@@ -110,7 +125,8 @@ print(f"Testing samples: {len(X_test)}")
 
 # Define the model
 model = keras.Sequential([
-    keras.layers.Conv2D(32, (3, 3), activation='relu', input_shape=(224, 224, 3)),
+    keras.layers.Input(shape=(224, 224, 3)),
+    keras.layers.Conv2D(32, (3, 3), activation='relu'),
     keras.layers.MaxPooling2D((2, 2)),
     keras.layers.Conv2D(64, (3, 3), activation='relu'),
     keras.layers.MaxPooling2D((2, 2)),
@@ -127,13 +143,12 @@ model.compile(optimizer='adam',
               metrics=['accuracy'])
 
 # Train the model
-model.fit(X_train, y_train, epochs=10, batch_size=32, validation_data=(X_test, y_test))
+model.fit(X_train, y_train, epochs=10, batch_size=16, validation_data=(X_test, y_test))
 
 # Evaluate the model
 loss, accuracy = model.evaluate(X_test, y_test)
 print(f"Test accuracy: {accuracy:.3f}")
-
 print(f"Test loss: {loss:.3f}")
 
 # Save the model
-model.save('model.keras')
+model.save('models/model.keras')
