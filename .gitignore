@@ -4,3 +4,4 @@ bin/
 lib/
 venv/
 asl/
+sampled_asl/
