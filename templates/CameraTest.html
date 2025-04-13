@@ -35,6 +35,15 @@
       align-items: center;
       text-align: center;
       padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .divider {
+      width: 100%;
+      max-width: 1514px;
+      height: 292px;
+      background: linear-gradient(180deg, #0B041E 11.06%, rgba(1, 0, 33, 0) 100%);
+      margin: 0 auto;
     }
 
     .section.hero h1, .section.hero h3 {
@@ -59,6 +68,7 @@
       background: rgba(0, 0, 0, 0.5);
       padding: 20px;
       border-radius: 20px;
+      margin: 0 auto;
     }
 
     video {
@@ -66,6 +76,7 @@
       height: 480px;
       border: 4px solid white;
       border-radius: 10px;
+      transform: scaleX(-1);
     }
   </style>
 </head>
@@ -75,6 +86,8 @@
     <h1 id="title"></h1>
     <h3 id="subtitle"></h3>
   </div>
+
+  <div class="divider"></div>
 
   <!-- Screen after scrolling -->
   <div class="section">
@@ -128,7 +141,7 @@
       }
     }
 
-    // List of fonts to cycle through (we have to decide what fonts are we gonna have)
+    // List of fonts to cycle through
     const fonts = [
       "Orbitron, sans-serif",
       "'Press Start 2P', cursive",
@@ -136,7 +149,7 @@
       "'Rubik Mono One', sans-serif"
     ];
 
-    // Function to randomly change font of the title every 3 seconds
+    // Function to randomly change font of the title every 1 second
     function startFontCycle() {
       setInterval(() => {
         const randomFont = fonts[Math.floor(Math.random() * fonts.length)];
