@@ -13,17 +13,15 @@ from sklearn.model_selection import train_test_split
 # Download dataset from Kaggle
 path = kagglehub.dataset_download("ayuraj/american-sign-language-dataset")
 print("Path to dataset files:", path)
+
 print("Files in dataset path:", os.listdir(path))  # Debugging line
 
 # Update to match actual folder inside the dataset
 data_dir = os.path.join(path, 'asl')  # Adjust if folder name differs
 
-# Remove number data
-for i in range(0, 9):
-    os.remove('./asl/' + str(i))
 
 # Define the percentage of data to sample
-sample_percentage = 0.005  # 0.5% of the data
+sample_percentage = 0.03  # 0.5% of the data
 
 # Function to sample a percentage of data
 def sample_data(data_dir, sample_percentage):
@@ -85,7 +83,8 @@ def load_data(data_dir, add_noise=False):
                     img = cv2.resize(img, (200, 200))
 
                     # Extract the label (first letter of the filename)
-                    label = img_name[0].lower()
+                    label = folder_name.lower()
+
 
                     # Convert label to integer if not already mapped
                     if label not in label_map:
@@ -130,6 +129,7 @@ model = keras.Sequential([
     keras.layers.Conv2D(128, (3, 3), activation='relu'),
     keras.layers.MaxPooling2D((2, 2)),
     keras.layers.Flatten(),
+    keras.layers.Dropout(0.3),
     keras.layers.Dense(128, activation='relu'),
     keras.layers.Dense(len(label_map), activation='softmax')
 ])
