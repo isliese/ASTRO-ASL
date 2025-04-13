@@ -142,12 +142,11 @@
         border: none;
         border-radius: 0px;
       }
-
       video {
-        width: 640px;
-        height: 480px;
+        width: 320px;
+        height: 240px;
         border: none;
-        border-radius: 50px;
+        border-radius: 20px;
         transform: scaleX(-1);
       }
     </style>
@@ -214,6 +213,7 @@
 
     <div class="section" id="fourth-section">
       <h1>Developers</h1>
+    </br>
       <!--<h2 style="margin-bottom: 2rem">Meet the Team</h2>-->
       <div
         style="
@@ -246,7 +246,7 @@
             "
           />
           <h3>Jay</h3>
-          <p>tba<br />Flask, OpenCV</p>
+          <p>Backend Dev<br />Python</p>
         </div>
 
         <div
@@ -270,7 +270,7 @@
             "
           />
           <h3>Isla</h3>
-          <p>tba<br />CSS, Animation</p>
+          <p>Frontend Dev<br />CSS, Flask</p>
         </div>
 
         <div
@@ -294,7 +294,7 @@
             "
           />
           <h3>Iracema</h3>
-          <p>Front/Back End Dev<br />Flask, OpenCV</p>
+          <p>Frontend Dev<br />HTML, FLASK</p>
         </div>
 
         <div
@@ -318,8 +318,12 @@
             "
           />
           <h3>Owin</h3>
-          <p>tba<br />Flask, React</p>
+          <p>Backend Dev<br />Python</p>
         </div>
+      </div>
+    </br>
+      <div style="margin-bottom: 10px">
+        <p>Made with ♥</p>
       </div>
     </div>
 
@@ -339,14 +343,14 @@
       const toggleBtn = document.getElementById("toggleCameraBtn");
 
       function toggleCamera() {
-        if (isCameraOn) {
-          cameraImg.src = "";
-          toggleBtn.textContent = "Turn Camera On";
+        const cameraContainer = document.querySelector(".camera-container");
+        if (cameraContainer.style.display === "none") {
+          cameraContainer.style.display = "block";
+          toggleBtn.textContent = "Close Camera";
         } else {
-          cameraImg.src = "{{ url_for('video_feed') }}";
-          toggleBtn.textContent = "Turn Camera Off";
+          cameraContainer.style.display = "none";
+          toggleBtn.textContent = "Open Camera";
         }
-        isCameraOn = !isCameraOn;
       }
 
       // subtitle typing effect
