@@ -4,7 +4,7 @@ import cv2
 import numpy as np
 import base64
 import tensorflow as tf
-import json
+import mediapipe as mp  # Import MediaPipe for hand detection
 
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins='*')
@@ -17,6 +17,10 @@ try:
 except Exception as e:
     print(f"Error loading model: {e}")
     model_loaded = False
+
+# Initialize MediaPipe Hand model
+mp_hands = mp.solutions.hands
+hands = mp_hands.Hands(min_detection_confidence=0.7, min_tracking_confidence=0.7)
 
 def preprocess_image(frame):
     img = cv2.resize(frame, (224, 224))
@@ -33,6 +37,36 @@ def predict_gesture(frame):
     confidence = predictions[0][idx]
     letter = chr(ord('a') + idx)
     return letter, float(confidence)
+
+def crop_hand_from_frame(frame):
+    # Convert the frame to RGB for MediaPipe processing
+    rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    result = hands.process(rgb_frame)
+
+    if result.multi_hand_landmarks:
+        for landmarks in result.multi_hand_landmarks:
+            # Get the bounding box around the hand
+            x_min = min([lm.x for lm in landmarks.landmark]) * frame.shape[1]
+            x_max = max([lm.x for lm in landmarks.landmark]) * frame.shape[1]
+            y_min = min([lm.y for lm in landmarks.landmark]) * frame.shape[0]
+            y_max = max([lm.y for lm in landmarks.landmark]) * frame.shape[0]
+
+            # Calculate the center of the hand
+            center_x = int((x_min + x_max) / 2)
+            center_y = int((y_min + y_max) / 2)
+
+            # Define the zoomed-in region
+            size = 224
+            x1 = max(center_x - size // 2, 0)
+            y1 = max(center_y - size // 2, 0)
+            x2 = min(center_x + size // 2, frame.shape[1])
+            y2 = min(center_y + size // 2, frame.shape[0])
+
+            # Extract the region of interest (ROI) around the hand
+            cropped_hand = frame[y1:y2, x1:x2]
+            return cropped_hand
+
+    return frame  # If no hands are detected, return the original frame
 
 @app.route('/')
 def index():
@@ -53,8 +87,9 @@ def handle_frame(data):
             print("Received empty data")
             return
 
-        # Convert base64 to numpy array
-        decoded = base64.b64decode(data)
+        # Remove base64 header (e.g., data:image/jpeg;base64,...)
+        header, encoded = data.split(',', 1)
+        decoded = base64.b64decode(encoded)
         nparr = np.frombuffer(decoded, np.uint8)
         frame = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
@@ -62,19 +97,17 @@ def handle_frame(data):
             print("Failed to decode image")
             return
 
+        # Crop the hand region
+        cropped_frame = crop_hand_from_frame(frame)
+
         # Make prediction
-        letter, confidence = predict_gesture(frame)
-        
-        # Send prediction back to client
+        letter, confidence = predict_gesture(cropped_frame)
+
+        # Send prediction result
         socketio.emit('prediction', {
             'letter': letter,
-            'confidence': confidence
+            'confidence': round(confidence * 100, 2)  # Send as percentage
         })
-
-        # Debug display
-      #  cv2.imshow('WebSocket Frame', frame)
-      #  if cv2.waitKey(1) == 27:  # ESC
-      #      exit(0)
 
     except Exception as e:
         print(f"Error processing frame: {e}")
