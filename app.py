@@ -6,10 +6,10 @@ import numpy as np
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins='*')
 
-# Camera Test Page
+# Home Page
 @app.route('/')
 def index():
-    return render_template('CameraTest.html')
+    return render_template('HomePage.html')
 
 @socketio.on('frame')
 def handle_frame(data):
