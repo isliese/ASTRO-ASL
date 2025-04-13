@@ -8,29 +8,29 @@ import numpy as np
     def frame():
 '''
 
-# set capture at video index
+# Set capture at video index
 capture = cv.VideoCapture(0)
 
-# check if camera opens (allow mac permissions possibly)
+# Check if camera opens
 if not capture.isOpened():
     print("Cannot open camera")
     print("Please check your access to camera")
     exit()
 
 while True:
-    # read frames from video capture
+    # Read frames from video capture
     ret, frame = capture.read()
 
     if not ret:
         print("Error recieving frame. ")
         break
 
-    # convert image to gray scale
+    # Convert image to gray scale
     gray = cv.cvtColor(frame,cv.COLOR_BGR2GRAY)
 
-    # show video
+    # Show video
     cv.imshow('frame', gray)
-    if cv.waitKey(1) == ord('q'): # press 'q' to quit
+    if cv.waitKey(1) == ord('q'): # Press 'q' to quit
         break
 
 capture.release()

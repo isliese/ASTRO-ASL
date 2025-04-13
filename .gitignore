@@ -5,3 +5,4 @@ lib/
 venv/
 asl/
 sampled_asl/
+.env
