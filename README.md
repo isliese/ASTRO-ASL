@@ -90,7 +90,9 @@ This project uses the following technologies, libraries, and datasets:
 
 ### Languages:
 - **Python**
-
+- **HTML**
+- **CSS**
+- **JS**
 
 ### Libraries:
 - **Flask** – A micro web framework for Python.
@@ -99,7 +101,7 @@ This project uses the following technologies, libraries, and datasets:
 - **NumPy** – A library for numerical computing in Python.
 
 ### Dataset:
-- **[American Sign Language Dataset(https://www.kaggle.com/datasets/ayuraj/american-sign-language-dataset)** – A dataset used for training the the model.
+- [American Sign Language Dataset(https://www.kaggle.com/datasets/ayuraj/american-sign-language-dataset) – A dataset used for training the the model.
 
 ### 🧠 Machine Learning Algorithm
 
