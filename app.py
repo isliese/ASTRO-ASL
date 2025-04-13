@@ -4,12 +4,14 @@ import cv2
 import numpy as np
 import base64
 import tensorflow as tf
-import mediapipe as mp  # Import MediaPipe for hand detection
+import mediapipe as mp
+import os
+import time
 
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins='*')
 
-# Load model
+# Load keras model
 try:
     model = tf.keras.models.load_model('model.keras')
     model_loaded = True
@@ -18,7 +20,7 @@ except Exception as e:
     print(f"Error loading model: {e}")
     model_loaded = False
 
-# Initialize MediaPipe Hand model
+# Initialize MediaPipe Hands model
 mp_hands = mp.solutions.hands
 hands = mp_hands.Hands(min_detection_confidence=0.7, min_tracking_confidence=0.7)
 
@@ -42,7 +44,6 @@ def crop_hand_from_frame(frame):
     # Convert the frame to RGB for MediaPipe processing
     rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     result = hands.process(rgb_frame)
-
     if result.multi_hand_landmarks:
         for landmarks in result.multi_hand_landmarks:
             # Get the bounding box around the hand
@@ -50,23 +51,20 @@ def crop_hand_from_frame(frame):
             x_max = max([lm.x for lm in landmarks.landmark]) * frame.shape[1]
             y_min = min([lm.y for lm in landmarks.landmark]) * frame.shape[0]
             y_max = max([lm.y for lm in landmarks.landmark]) * frame.shape[0]
-
             # Calculate the center of the hand
             center_x = int((x_min + x_max) / 2)
             center_y = int((y_min + y_max) / 2)
-
-            # Define the zoomed-in region
+            # Define the zoomed-in region (size 224x224)
             size = 224
             x1 = max(center_x - size // 2, 0)
             y1 = max(center_y - size // 2, 0)
             x2 = min(center_x + size // 2, frame.shape[1])
             y2 = min(center_y + size // 2, frame.shape[0])
-
             # Extract the region of interest (ROI) around the hand
             cropped_hand = frame[y1:y2, x1:x2]
             return cropped_hand
-
-    return frame  # If no hands are detected, return the original frame
+    # If no hand is detected, return the original frame
+    return frame
 
 @app.route('/')
 def index():
@@ -92,21 +90,26 @@ def handle_frame(data):
         decoded = base64.b64decode(encoded)
         nparr = np.frombuffer(decoded, np.uint8)
         frame = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-
         if frame is None:
             print("Failed to decode image")
             return
 
-        # Crop the hand region
+        # Save captured image to static/captures folder
+        captures_dir = os.path.join('static', 'captures')
+        if not os.path.exists(captures_dir):
+            os.makedirs(captures_dir)
+        timestamp = int(time.time())
+        filename = os.path.join(captures_dir, f"capture_{timestamp}.jpg")
+        cv2.imwrite(filename, frame)
+
+        # Crop the hand region for prediction
         cropped_frame = crop_hand_from_frame(frame)
-
-        # Make prediction
+        # Predict the gesture from the captured (and cropped) frame
         letter, confidence = predict_gesture(cropped_frame)
-
-        # Send prediction result
+        # Emit prediction result (letter and confidence)
         socketio.emit('prediction', {
             'letter': letter,
-            'confidence': round(confidence * 100, 2)  # Send as percentage
+            'confidence': round(confidence * 100, 2)  # as percentage
         })
 
     except Exception as e:

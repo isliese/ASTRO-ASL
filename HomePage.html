@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ASTRO ASL</title>
+  <!-- Google Fonts: Futuristic Style -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron&family=Rajdhani&family=Audiowide&family=Exo&family=Titillium+Web&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #010021;
+      color: white;
+      font-family: Arial, sans-serif;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image: url("{{ url_for('static', filename='space_background.webp') }}");
+      background-size: 110% auto;
+      background-position: 0% 0%;
+      background-repeat: repeat-x;
+      opacity: 0.4;
+      z-index: -1;
+      animation: moveBackground 30s linear infinite;
+    }
+    @keyframes moveBackground {
+      0% { background-position: 0% 0%; }
+      100% { background-position: 100% 0%; }
+    }
+    /* Section styles */
+    .section {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    /* Divider style */
+    .divider {
+      width: 100%;
+      max-width: 1514px;
+      height: 292px;
+      background: linear-gradient(180deg, rgba(11, 4, 30, 0.6) 11.06%, rgba(
