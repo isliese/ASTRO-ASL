@@ -24,16 +24,18 @@ Sound doesn’t travel in the vacuum of space, making traditional spoken communi
 ## ✨ Features  
 
 | Feature           | Description                                                  |
-|------------------|--------------------------------------------------------------|
+|-------------------|--------------------------------------------------------------|
 | 🤖 AI Recognition | Real-time ASL interpretation via onboard camera systems      |
 | 🧠 Onboard ML     | No internet needed — edge processing for zero-latency use    |
-| 🧤 Glove Support  | Compatible with bulky astronaut gloves                       |
-| 📊 Transcription Log | Automatically logs conversations for mission review      |
+| 🧤 Glove Support* | Compatible with bulky astronaut gloves                       |
+| 📊 Scribe Logs*   | Automatically logs conversations for mission review          |
 | 🌌 Space-Ready    | Designed for zero-gravity and suit integration               |
+
+\* TBD (To Be Developed...)
 
 ## 🌟 How Are We Unique?  
 
-- **Tech Used**: TensorFlow, OpenCV, Mediapipe, sklearn
+- **Tech Used**: TensorFlow, OpenCV, Mediapipe, Sci-kitlearn
 - **Built for Space**: Engineered to work in zero-gravity and vacuum conditions  
 - **Offline AI**: Works without any internet connection, runs locally  
 - **Mission-Critical UX**: Simplified UI for high-pressure scenarios 
@@ -41,8 +43,8 @@ Sound doesn’t travel in the vacuum of space, making traditional spoken communi
 ## 🚀 Steps to Use
 1. **Clone Repository**:
    ```bash
-   git clone git@github.com:isliese/winning-fullyhacks
-   cd winning-fullyhacks
+   git clone git@github.com:isliese/astro-asl
+   cd astro-asl
    ```
 
 2. **Set Up Environment**:
@@ -74,7 +76,7 @@ Sound doesn’t travel in the vacuum of space, making traditional spoken communi
 | Issue | Solution |
 |-------|----------|
 | Performance Slowdowns | Ensure efficient use of system resources |
-| False Positives/Negatives | Update ML model with new data |
+| False Positives/Negatives | Strengthen model to reduce overfitting |
 | Installation Issues | Verify Python version and dependencies |
 
 ## 🤝 Contributing
@@ -86,13 +88,12 @@ We welcome contributions! Please follow these steps:
 ## 👥 Team
 | Role | Member |
 |------|--------|
-| Backend / Research | Owin |
+| Backend | Owin |
 | Backend | Jay |
-| Frontend / Design | Isla |
+| Frontend | Isla |
 | Frontend | Sema |
 
 ## 🙏 Credits  
-## Credits
 
 This project uses the following technologies, libraries, and datasets:
 
@@ -119,5 +120,4 @@ This project uses the following technologies, libraries, and datasets:
 - **CNN** – Convolutional Neural Network (CNN) is a deep learning algorithm used for image classification tasks, implemented using TensorFlow and Keras.
 
 ## 📄 License
-MIT License
-© 2025 | Astro ASL Team - Fullyhacks @ CSUF
+© 2025 | AstroASL Team - Fullyhacks @ CSUF
