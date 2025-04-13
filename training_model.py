@@ -2,12 +2,57 @@
 import os
 import cv2
 import numpy as np
+import tensorflow as tf
 import keras
-import tf
+import kagglehub
+
 from sklearn.model_selection import train_test_split
 
+# Download dataset from Kaggle
+path = kagglehub.dataset_download("ayuraj/american-sign-language-dataset")
+print("Path to dataset files:", path)
+print("Files in dataset path:", os.listdir(path))  # Debugging line
 
-data_dir = './asl'
+# Update to match actual folder inside the dataset
+data_dir = os.path.join(path, 'asl')  # Adjust if folder name differs
+
+# Define the percentage of data to sample
+sample_percentage = 0.01  # 10% of the data
+
+# Function to sample a percentage of data
+def sample_data(data_dir, sample_percentage):
+    sampled_data_dir = path
+    if not os.path.exists(sampled_data_dir):
+        os.makedirs(sampled_data_dir)
+
+    for folder_name in os.listdir(data_dir):
+        if folder_name.startswith('.'):  # Skip hidden directories
+            continue
+        folder_path = os.path.join(data_dir, folder_name)
+        sampled_folder_path = os.path.join(sampled_data_dir, folder_name)
+
+        if os.path.isdir(folder_path):
+            if not os.path.exists(sampled_folder_path):
+                os.makedirs(sampled_folder_path)
+
+            images = os.listdir(folder_path)
+            sample_size = int(len(images) * sample_percentage)
+            sampled_images = np.random.choice(images, sample_size, replace=False)
+
+            for img_name in sampled_images:
+                img_path = os.path.join(folder_path, img_name)
+                sampled_img_path = os.path.join(sampled_folder_path, img_name)
+                os.rename(img_path, sampled_img_path)
+
+    return sampled_data_dir
+
+# Sample the data
+data_dir = sample_data(data_dir, sample_percentage)
+
+# Check if the data directory exists
+if not os.path.exists(data_dir):
+    print(f"Data directory '{data_dir}' does not exist.")
+    exit()
 
 def load_data(data_dir):
     images = []
@@ -25,14 +70,11 @@ def load_data(data_dir):
                 if img_name.endswith('.jpg') or img_name.endswith('.jpeg'):
                     img_path = os.path.join(folder_path, img_name)
                     img = cv2.imread(img_path)
-                    img = cv2.resize(img, (224, 224), interpolation=cv2.INTER_AREA)  # Resize to a consistent shape
+                    img = cv2.resize(img, (224, 224))  # Resize image to 224x224
 
                     # Extract the label (first letter of the filename)
-                    # Validate the assumption that the first letter represents the gesture
-                    label = img_name[0].lower() if img_name[0].isalpha() else 'unknown'
-                    if label == 'unknown':
-                        print(f"Warning: Assigning 'unknown' label to file '{img_name}' as it does not start with a valid letter.")
-                    
+                    label = img_name[0].lower()
+
                     # Convert label to integer if not already mapped
                     if label not in label_map:
                         label_map[label] = len(label_map)
@@ -56,11 +98,7 @@ images, labels, label_map = load_data(data_dir)
 images = images / 255.0
 
 # One-hot encode the labels
-labels = tf.keras.utils.to_categoricalto_cate(labels)
-
-# Sample data
-images = images[:1000]  # Use only the first 1000 samples for testing
-labels = labels[:1000]  # Use only the first 1000 samples for testing
+labels = keras.utils.to_categorical(labels)
 
 # Split into train and test sets
 X_train, X_test, y_train, y_test = train_test_split(images, labels, test_size=0.2, random_state=42)
@@ -97,4 +135,4 @@ print(f"Test accuracy: {accuracy:.3f}")
 print(f"Test loss: {loss:.3f}")
 
 # Save the model
-model.save('asl_model.h5')
+model.save('model.keras')
