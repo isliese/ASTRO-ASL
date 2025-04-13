@@ -1,233 +1,440 @@
-from flask import Flask, render_template
-from flask_socketio import SocketIO
-import cv2
-import numpy as np
-import base64
-import tensorflow as tf
-import mediapipe as mp  # Import MediaPipe for hand detection
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ASTRO ASL</title>
+  <!-- Google Fonts: Futuristic Style -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron&family=Rajdhani&family=Audiowide&family=Exo&family=Titillium+Web&display=swap" rel="stylesheet">
+  
+  <!-- CSS Starts -->
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #010021;
+      color: white;
+      font-family: Arial, sans-serif;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
 
-app = Flask(__name__)
-socketio = SocketIO(app, cors_allowed_origins='*')
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image: url("{{ url_for('static', filename='space_background.webp') }}");
+      background-size: 110% auto; 
+      background-position: 0% 0%;
+      background-repeat: repeat-x; 
+      opacity: 0.4;
+      z-index: -1;
+      animation: moveBackground 30s linear infinite;
+    }
 
-# Load model
-try:
-    model = tf.keras.models.load_model('model.keras')
-    model_loaded = True
-    print("Model loaded successfully")
-except Exception as e:
-    print(f"Error loading model: {e}")
-    model_loaded = False
+    @keyframes moveBackground {
+      0% {
+        background-position: 0% 0%;
+      }
+      100% {
+        background-position: 100% 0%;
+      }
+    }
+    
+    /* Section in general */
+    .section {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
 
-# Initialize MediaPipe Hand modelfrom flask import Flask, render_template
-from flask_socketio import SocketIO
-import cv2
-import numpy as np
-import base64
-import tensorflow as tf
-import mediapipe as mp  # Import MediaPipe for hand detection
+    /* Divider in general */
+    .divider {
+      width: 100%;
+      max-width: 1514px;
+      height: 292px;
+      background: linear-gradient(180deg, rgba(11, 4, 30, 0.6) 11.06%, rgba(1, 0, 33, 0) 100%);
+      margin: 0 auto;
+    }
 
-app = Flask(__name__)
-socketio = SocketIO(app, cors_allowed_origins='*')
+    /* First Section */
+    .section.hero h1, .section.hero h3 {
+      transition: font-family 0.5s ease;
+    }
 
-# Load model
-try:
-    model = tf.keras.models.load_model('model.keras')
-    model_loaded = True
-    print("Model loaded successfully")
-except Exception as e:
-    print(f"Error loading model: {e}")
-    model_loaded = False
+    .section.hero h1 {
+      font-size: 4rem;
+      margin-bottom: 20px;
+    }
 
-# Initialize MediaPipe Hand model
-mp_hands = mp.solutions.hands
-hands = mp_hands.Hands(min_detection_confidence=0.7, min_tracking_confidence=0.7)
+    .section.hero h3 {
+      font-size: 1.5rem;
+      line-height: 1.6;
+      padding: 10px 20px;
+      border-radius: 10px;
+      min-height: 5em;
+    }
 
-def preprocess_image(frame):
-    img = cv2.resize(frame, (224, 224))
-    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    img = img / 255.0
-    return np.expand_dims(img, axis=0)
+    /* Fade in Animation */
+    @keyframes fadeInUp {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
 
-def predict_gesture(frame):
-    if not model_loaded:
-        return "?", 0
-    processed = preprocess_image(frame)
-    predictions = model.predict(processed)
-    idx = np.argmax(predictions[0])
-    confidence = predictions[0][idx]
-    letter = chr(ord('a') + idx)
-    return letter, float(confidence)
+    .play-button {
+      width: 150px;
+      height: auto;
+      margin-top: -50px;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+      opacity: 0; 
+      pointer-events: none; 
+      display: block; 
+    }
 
-def crop_hand_from_frame(frame):
-    # Convert the frame to RGB for MediaPipe processing
-    rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-    result = hands.process(rgb_frame)
+    .play-button.fade-in {
+      animation: fadeInUp 1s ease-out forwards;
+      pointer-events: auto;
+    }
 
-    if result.multi_hand_landmarks:
-        for landmarks in result.multi_hand_landmarks:
-            # Get the bounding box around the hand
-            x_min = min([lm.x for lm in landmarks.landmark]) * frame.shape[1]
-            x_max = max([lm.x for lm in landmarks.landmark]) * frame.shape[1]
-            y_min = min([lm.y for lm in landmarks.landmark]) * frame.shape[0]
-            y_max = max([lm.y for lm in landmarks.landmark]) * frame.shape[0]
+    .play-button:hover {
+      transform: scale(1.1);
+    }
 
-            # Calculate the center of the hand
-            center_x = int((x_min + x_max) / 2)
-            center_y = int((y_min + y_max) / 2)
+    /* Second Section */
+    .information {
 
-            # Define the zoomed-in region
-            size = 224
-            x1 = max(center_x - size // 2, 0)
-            y1 = max(center_y - size // 2, 0)
-            x2 = min(center_x + size // 2, frame.shape[1])
-            y2 = min(center_y + size // 2, frame.shape[0])
+    }
 
-            # Extract the region of interest (ROI) around the hand
-            cropped_hand = frame[y1:y2, x1:x2]
-            return cropped_hand
+    /* Third Section */
+    .camera-and-target {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 40px; 
+      padding: 30px;
+      border-radius: 20px;
+    }
+    
+    .camera-container, .target-container {
+      padding: 0;
+      margin: 0;
+    }
 
-    return frame  # If no hands are detected, return the original frame
+    .target-container img {
+      width: 730px;
+      height: 470px;
+      border: none; 
+      border-radius: 0px; 
+    }
 
-@app.route('/')
-def index():
-    return render_template('HomePage.html')
+    video {
+      width: 640px;
+      height: 480px;
+      border: none; 
+      border-radius: 50px; 
+      transform: scaleX(-1);
+    }
 
-@socketio.on('connect')
-def handle_connect():
-    print('Client connected')
+    /* Fourth Section */
+    .big-title {
+      font-size: 3rem; 
+      font-weight: bold;
+      line-height: 1.2;
+    }
 
-@socketio.on('disconnect')
-def handle_disconnect():
-    print('Client disconnected')
+    .profile {
+      position: relative;
+      display: inline-block;
+      overflow: hidden;
+    }
 
-@socketio.on('frame')
-def handle_frame(data):
-    try:
-        if not data:
-            print("Received empty data")
-            return
+    .profile img {
+      display: block;
+      width: 200px;
+      height: auto;
+      border-radius: 30%;
+      transition: transform 0.3s ease, filter 0.3s ease;
+    }
 
-        # Remove base64 header (e.g., data:image/jpeg;base64,...)
-        header, encoded = data.split(',', 1)
-        decoded = base64.b64decode(encoded)
-        nparr = np.frombuffer(decoded, np.uint8)
-        frame = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+    .profile .overlay-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.1rem;
+      font-weight: bold;
+      text-shadow: 2px 2px 8px black;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
 
-        if frame is None:
-            print("Failed to decode image")
-            return
+    .profile:hover img {
+      filter: grayscale(100%);
+      transform: scale(1.05);
+    }
 
-        # Crop the hand region
-        cropped_frame = crop_hand_from_frame(frame)
+    .profile:hover .overlay-text {
+      opacity: 1;
+    }
 
-        # Make prediction
-        letter, confidence = predict_gesture(cropped_frame)
+    .profile-links {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 74px;
+      margin-top: 20px;
+    }
 
-        # Send prediction result
-        socketio.emit('prediction', {
-            'letter': letter,
-            'confidence': round(confidence * 100, 2)  # Send as percentage
-        })
+    .profile-links img {
+      height: auto;
+      width: auto;
+      border-radius: 30%;
+      transition: transform 0.3s ease;
+      cursor: pointer;
+    }
 
-    except Exception as e:
-        print(f"Error processing frame: {e}")
+    .profile {
+      position: relative;
+      display: inline-block;
+      overflow: hidden;
+    }
 
-if __name__ == '__main__':
-    print("Starting server...")
-    socketio.run(app, debug=True, port=8080, allow_unsafe_werkzeug=True)
-mp_hands = mp.solutions.hands
-hands = mp_hands.Hands(min_detection_confidence=0.7, min_tracking_confidence=0.7)
+    .profile img {
+      display: block;
+      width: 250px; 
+      height: auto;
+      border-radius: 30%;
+      transition: transform 0.3s ease, filter 0.3s ease;
+    }
 
-def preprocess_image(frame):
-    img = cv2.resize(frame, (224, 224))
-    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    img = img / 255.0
-    return np.expand_dims(img, axis=0)
+    .profile .overlay-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-size: 1.1rem;
+      font-weight: bold;
+      text-shadow: 2px 2px 8px black;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
 
-def predict_gesture(frame):
-    if not model_loaded:
-        return "?", 0
-    processed = preprocess_image(frame)
-    predictions = model.predict(processed)
-    idx = np.argmax(predictions[0])
-    confidence = predictions[0][idx]
-    letter = chr(ord('a') + idx)
-    return letter, float(confidence)
+    .profile:hover img {
+      filter: grayscale(100%);
+      transform: scale(1.05);
+    }
 
-def crop_hand_from_frame(frame):
-    # Convert the frame to RGB for MediaPipe processing
-    rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-    result = hands.process(rgb_frame)
+    .profile:hover .overlay-text {
+      opacity: 1;
+    }
 
-    if result.multi_hand_landmarks:
-        for landmarks in result.multi_hand_landmarks:
-            # Get the bounding box around the hand
-            x_min = min([lm.x for lm in landmarks.landmark]) * frame.shape[1]
-            x_max = max([lm.x for lm in landmarks.landmark]) * frame.shape[1]
-            y_min = min([lm.y for lm in landmarks.landmark]) * frame.shape[0]
-            y_max = max([lm.y for lm in landmarks.landmark]) * frame.shape[0]
+  </style>
+</head>
+<body>
 
-            # Calculate the center of the hand
-            center_x = int((x_min + x_max) / 2)
-            center_y = int((y_min + y_max) / 2)
+  <!-- First Section -->
+  <div class="section hero">
+    <img src="{{ url_for('static', filename='title.png') }}"
+     alt="Welcome Title"
+     style="display: block; margin: 0 auto; width: 65%; height: auto;" />
+    <h3 id="subtitle"></h3>
+    <img id="play-button" class="play-button" src="{{ url_for('static', filename='play_button.png') }}" alt="Play Button" />
+  </div>
 
-            # Define the zoomed-in region
-            size = 224
-            x1 = max(center_x - size // 2, 0)
-            y1 = max(center_y - size // 2, 0)
-            x2 = min(center_x + size // 2, frame.shape[1])
-            y2 = min(center_y + size // 2, frame.shape[0])
+  <!-- Divider -->
+  <div class="divider"></div>
 
-            # Extract the region of interest (ROI) around the hand
-            cropped_hand = frame[y1:y2, x1:x2]
-            return cropped_hand
+  <!-- Second Section -->
+  <div class="section" id="second-section">
+    <h1>
+      Purpose of Astro ASL
+      <br />
+      <!--And How We Made It Happen !-->
+    </h1>
+    
+    <h2>
+      No sound in space. No problem. American Sign Language is redefining
+      astronaut communication.
+    </h2>
+    <h3>
+      In the vacuum of space, sound can't travel, and ASL offers a silent, efficient solution. Astro ASL demonstrates how sign language enables clear communication between astronauts. Our platform uses a trained machine learning model to detect ASL signs in real time through webcam input. Powered by deep learning and computer vision, the system interprets gestures accurately and instantly, offering a quiet, intuitive way to communicate in space.
+    </h3>
+  </div>
 
-    return frame  # If no hands are detected, return the original frame
+  <!-- Divider -->
+  <div class="divider"></div>
 
-@app.route('/')
-def index():
-    return render_template('HomePage.html')
+  <!-- Third Section with Camera -->
+  <div class="section" id="third-section">
+    <div id="camera-text"></div>
+    <div id="target-text"></div>
 
-@socketio.on('connect')
-def handle_connect():
-    print('Client connected')
+    <!-- Camera + Square Box Align Box -->
+    <div class="camera-and-target">
+    <div class="camera-container">
+      <video id="camera" autoplay></video>
+    </div>
+    <div class="target-container">
+      <img src="{{ url_for('static', filename='target-square.png') }}" alt="Target Square" />
+    </div>
+  </div>
+    
+    <!-- Print prediction result -->
+    <div id="prediction-result" style="color: white; font-size: 24px; margin-top: 10px;"></div>
+  </div>
+  
+  <!-- Divider -->
+  <div class="divider"></div>
+       <div>
+        <button id="toggleCameraBtn" onclick="toggleCamera()">
+          Close Camera
+        </button>
+      </div>
 
-@socketio.on('disconnect')
-def handle_disconnect():
-    print('Client disconnected')
+  <!-- Fourth Section -->
+  <div class="section" id="fourth-section">
+    <h1 class="big-title">Meet the Team</h1>
 
-@socketio.on('frame')
-def handle_frame(data):
-    try:
-        if not data:
-            print("Received empty data")
-            return
+    <div class="profile-links">
+      <!-- Jay -->
+      <div class="profile jay-profile">
+        <a href="https://github.com/jay-gleeson" target="_blank">
+          <img src="{{ url_for('static', filename='profile-sample.png') }}" alt="Developer 1">
+          <div class="overlay-text">Jay - AI/Backend<br><br>Check out Jay's github</div>
+        </a>
+      </div>
+      <!-- Isla -->
+      <div class="profile isla-profile">
+        <a href="https://github.com/isliese" target="_blank">
+          <img src="{{ url_for('static', filename='profile-sample.png') }}" alt="Developer 2">
+          <div class="overlay-text">Isla - Design/Frontend<br><br>Check out Isla's github</div>
+        </a>
+      </div>
+      <!-- Owin -->
+      <div class="profile owin-profile">
+        <a href="https://github.com/owinrojas" target="_blank">
+          <img src="{{ url_for('static', filename='profile-sample.png') }}" alt="Developer 3">
+          <div class="overlay-text">Owin - AI/Research<br><br>Check out Owin's github</div>
+        </a>
+      </div>
+      <!-- Iracema -->
+      <div class="profile iracema-profile">
+        <a href="https://github.com/Iracema008" target="_blank">
+          <img src="{{ url_for('static', filename='profile-sample.png') }}" alt="Developer 4">
+          <div class="overlay-text">Iracema - Frontend<br><br>Check out Iracema's github</div>
+        </a>
+      </div>
+    </div>
+    <h3>Made with 🤍</h3>
+  </div>
+  </body>
 
-        # Remove base64 header (e.g., data:image/jpeg;base64,...)
-        header, encoded = data.split(',', 1)
-        decoded = base64.b64decode(encoded)
-        nparr = np.frombuffer(decoded, np.uint8)
-        frame = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
-        if frame is None:
-            print("Failed to decode image")
-            return
+  <script>
+    // Text setting
+    const subtitleLines = [
+      "Experience how this can make our space💫 better"
+    ];
+  
+    const subtitleElement = document.getElementById("subtitle");
+    const playButton = document.getElementById("play-button");
+  
+    let subtitleIndex = 0;
+    let subtitleLineIndex = 0;
+      let isCameraOn = true;
+      const cameraImg = document.getElementById("camera");
+      const toggleBtn = document.getElementById("toggleCameraBtn");
 
-        # Crop the hand region
-        cropped_frame = crop_hand_from_frame(frame)
+      function toggleCamera() {
+        const cameraContainer = document.querySelector(".camera-container");
+        if (cameraContainer.style.display === "none") {
+          cameraContainer.style.display = "block";
+          toggleBtn.textContent = "Close Camera";
+        } else {
+          cameraContainer.style.display = "none";
+          toggleBtn.textContent = "Open Camera";
+        }
+      }
+  
+    // subtitle typing effect
+    function typeSubtitle() {
+      if (subtitleLineIndex < subtitleLines.length) {
+        if (subtitleIndex < subtitleLines[subtitleLineIndex].length) {
+          subtitleElement.innerHTML += subtitleLines[subtitleLineIndex].charAt(subtitleIndex++);
+          setTimeout(typeSubtitle, 60);
+        } else {
+          subtitleElement.innerHTML += "<br>";
+          subtitleLineIndex++;
+          subtitleIndex = 0;
+          setTimeout(typeSubtitle, 500);
+        }
+      } else {
+        playButton.classList.add('fade-in');
+      }
+    }
+  
+    typeSubtitle();
+  
+    playButton.addEventListener('click', function () {
+      const thirdSection = document.getElementById('third-section');
+      thirdSection.scrollIntoView({ behavior: 'smooth' });
+    });
+  
+    // Access Webcam
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => {
+        const video = document.getElementById('camera');
+        video.srcObject = stream;
+      })
+      .catch(error => {
+        console.error("Camera access error:", error);
+      });
+  </script>
+  <!-- Connect to Socket.IO and send webcam frame -->
+  <script src="https://cdn.socket.io/4.3.2/socket.io.min.js"></script>
+  <script>
+    const video = document.getElementById('camera');
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    const socket = io();
 
-        # Make prediction
-        letter, confidence = predict_gesture(cropped_frame)
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then((stream) => {
+        video.srcObject = stream;
+        video.play();
+        setInterval(() => {
+          canvas.width = video.videoWidth;
+          canvas.height = video.videoHeight;
+          context.drawImage(video, 0, 0, canvas.width, canvas.height);
+          const frameData = canvas.toDataURL('image/jpeg');
+          socket.emit('frame', frameData);
+        }, 200); // every 0.2 sec
+      })
+      .catch((err) => {
+        console.error("Fail to access Webcam:", err);
+      });
 
-        # Send prediction result
-        socketio.emit('prediction', {
-            'letter': letter,
-            'confidence': round(confidence * 100, 2)  # Send as percentage
-        })
+    socket.on('prediction', (data) => {
+      const { letter, confidence } = data;
+      document.getElementById('prediction-result').innerText = `Prediction: ${letter} (${confidence}%)`;
+    });
+  </script>
 
-    except Exception as e:
-        print(f"Error processing frame: {e}")
-
-if __name__ == '__main__':
-    print("Starting server...")
-    socketio.run(app, debug=True, port=8080, allow_unsafe_werkzeug=True)
+</body>
+</html>
