@@ -78,9 +78,9 @@ We welcome contributions! Please follow these steps:
 ## 👥 Team
 | Role | Member |
 |------|--------|
-| Backend | Owin |
+| Backend / Research | Owin |
 | Backend | Jay |
-| Frontend | Isla |
+| Frontend / Design | Isla |
 | Frontend | Sema |
 
 ## 🙏 Credits  
