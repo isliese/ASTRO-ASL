@@ -4,26 +4,20 @@ import cv2
 import numpy as np
 import tensorflow as tf
 import keras
-import random
 import kagglehub
-
 from sklearn.model_selection import train_test_split
-
 
 # Download dataset from Kaggle
 path = kagglehub.dataset_download("ayuraj/american-sign-language-dataset")
 print("Path to dataset files:", path)
-print("Files in dataset path:", os.listdir(path))  # Debugging line
 
 # Update to match actual folder inside the dataset
 data_dir = os.path.join(path, 'asl')  # Adjust if folder name differs
 
-# Remove number data
-for i in range(0, 9):
-    os.remove('./asl/' + str(i))
+print("Files in dataset path:", os.listdir(path))  # Debugging line
 
 # Define the percentage of data to sample
-sample_percentage = 0.005  # 0.5% of the data
+sample_percentage = 0.1  # 0.5% of the data
 
 # Function to sample a percentage of data
 def sample_data(data_dir, sample_percentage):
@@ -32,7 +26,7 @@ def sample_data(data_dir, sample_percentage):
         os.makedirs(sampled_data_dir)
 
     for folder_name in os.listdir(data_dir):
-        if folder_name.startswith('.'):  # Skip hidden directories
+        if folder_name == 'asl' or not folder_name.isalpha() or len(folder_name) != 1:
             continue
         folder_path = os.path.join(data_dir, folder_name)
         sampled_folder_path = os.path.join(sampled_data_dir, folder_name)
@@ -72,8 +66,9 @@ def load_data(data_dir, add_noise=False):
     label_map = {}  # To map gestures to integer labels
 
     for folder_name in os.listdir(data_dir):
-        if folder_name.startswith('.'):  # Skip hidden directories
+        if folder_name == 'asl' or not folder_name.isalpha() or len(folder_name) != 1: # Only consider folders with single-letter names
             continue
+
         folder_path = os.path.join(data_dir, folder_name)
         
         if os.path.isdir(folder_path):
@@ -82,10 +77,11 @@ def load_data(data_dir, add_noise=False):
                 if img_name.endswith('.jpg') or img_name.endswith('.jpeg'):
                     img_path = os.path.join(folder_path, img_name)
                     img = cv2.imread(img_path)
-                    img = cv2.resize(img, (200, 200))
+                    img = cv2.resize(img, (224, 224))
 
                     # Extract the label (first letter of the filename)
-                    label = img_name[0].lower()
+                    label = folder_name.lower()
+
 
                     # Convert label to integer if not already mapped
                     if label not in label_map:
@@ -109,7 +105,6 @@ images, labels, label_map = load_data(data_dir, add_noise=True)
 # Normalize pixel values to be between 0 and 1
 images = images / 255.0
 
-
 # One-hot encode the labels
 labels = keras.utils.to_categorical(labels)
 
@@ -122,7 +117,7 @@ print(f"Testing samples: {len(X_test)}")
 
 # Define the model
 model = keras.Sequential([
-    keras.layers.Input(shape=(200, 200, 3)),
+    keras.layers.Input(shape=(224, 224, 3)),
     keras.layers.Conv2D(32, (3, 3), activation='relu'),
     keras.layers.MaxPooling2D((2, 2)),
     keras.layers.Conv2D(64, (3, 3), activation='relu'),
@@ -130,6 +125,7 @@ model = keras.Sequential([
     keras.layers.Conv2D(128, (3, 3), activation='relu'),
     keras.layers.MaxPooling2D((2, 2)),
     keras.layers.Flatten(),
+    keras.layers.Dropout(0.3),
     keras.layers.Dense(128, activation='relu'),
     keras.layers.Dense(len(label_map), activation='softmax')
 ])
@@ -140,7 +136,7 @@ model.compile(optimizer='adam',
               metrics=['accuracy'])
 
 # Train the model
-model.fit(X_train, y_train, epochs=50, batch_size=32, validation_data=(X_test, y_test))
+model.fit(X_train, y_train, epochs=5, batch_size=32, validation_data=(X_test, y_test))
 
 # Evaluate the model
 loss, accuracy = model.evaluate(X_test, y_test)

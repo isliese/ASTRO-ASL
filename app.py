@@ -35,9 +35,11 @@ def predict_gesture(frame):
         return "?", 0
     processed = preprocess_image(frame)
     predictions = model.predict(processed)
+    print(f"Model Raw Predictions: {predictions}")
     idx = np.argmax(predictions[0])
     confidence = predictions[0][idx]
     letter = chr(ord('a') + idx)
+    print(f"Predicted letter: {letter}, Confidence: {confidence:.2f}")
     return letter, float(confidence)
 
 def crop_hand_from_frame(frame):
@@ -111,6 +113,8 @@ def handle_frame(data):
             'letter': letter,
             'confidence': round(confidence * 100, 2)  # as percentage
         })
+
+        print(f"Predicted letter: {letter}, Confidence: {confidence:.2f}")
 
     except Exception as e:
         print(f"Error processing frame: {e}")
