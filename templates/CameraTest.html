@@ -3,8 +3,31 @@
 <html>
 <head>
     <title>Camera Test</title>
+    <style>
+        video {
+            width: 640px;
+            height: 480px;
+            border: 2px solid black;
+            border-radius: 10px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Welcome to Camera Test Page!</h1>
+    <h1>Live Webcam Feed</h1>
+    <video id="webcam" autoplay playsinline></video>
+
+    <script>
+        const video = document.getElementById('webcam');
+
+        // Request access to webcam
+        navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+            .then((stream) => {
+                video.srcObject = stream;
+            })
+            .catch((error) => {
+                console.error("Failed to access webcam:", error);
+                alert("Unable to access the webcam. Please allow camera permission.");
+            });
+    </script>
 </body>
 </html>

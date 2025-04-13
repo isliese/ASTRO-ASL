@@ -2,7 +2,7 @@ from flask import Flask, render_template
 
 app = Flask(__name__)
 
-# Camera Test
+# Camera Test Page
 @app.route('/')
 def index():
     return render_template('CameraTest.html')
