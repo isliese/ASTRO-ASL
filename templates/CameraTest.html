@@ -24,6 +24,7 @@
             .then((stream) => {
                 video.srcObject = stream;
             })
+            // When there's error
             .catch((error) => {
                 console.error("Failed to access webcam:", error);
                 alert("Unable to access the webcam. Please allow camera permission.");
