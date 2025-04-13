@@ -1,10 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>ASTRO ASL</title>
   <!-- Google Fonts: Futuristic Style -->
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron&family=Rajdhani&family=Audiowide&family=Exo&family=Titillium+Web&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Orbitron&family=Rajdhani&family=Audiowide&family=Exo&family=Titillium+Web&display=swap"
+    rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
   <style>
     body {
       margin: 0;
@@ -17,26 +21,30 @@
     }
 
     body::before {
-  content: "";
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background-image: url("{{ url_for('static', filename='space_background.webp') }}");
-  background-size: 110% auto; 
-  background-position: 0% 0%;
-  background-repeat: repeat-x; 
-  opacity: 0.4;
-  z-index: -1;
-  animation: moveBackground 30s linear infinite;
-}
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: url("{{ url_for('static', filename='space_background.webp') }}");
+      background-size: 110% auto;
+      background-position: 0% 0%;
+      background-repeat: repeat-x;
+      opacity: 0.4;
+      z-index: -1;
+      animation: moveBackground 30s linear infinite;
+    }
 
-@keyframes moveBackground {
-  0% {
-    background-position: 0% 0%;
-  }
-  100% {
-    background-position: 100% 0%;
-  }
-}
+    @keyframes moveBackground {
+      0% {
+        background-position: 0% 0%;
+      }
+
+      100% {
+        background-position: 100% 0%;
+      }
+    }
 
     .section {
       height: 100vh;
@@ -57,7 +65,8 @@
       margin: 0 auto;
     }
 
-    .section.hero h1, .section.hero h3 {
+    .section.hero h1,
+    .section.hero h3 {
       transition: font-family 0.5s ease;
     }
 
@@ -79,6 +88,7 @@
         opacity: 0;
         transform: translateY(20px);
       }
+
       100% {
         opacity: 1;
         transform: translateY(0);
@@ -91,9 +101,9 @@
       margin-top: -50px;
       cursor: pointer;
       transition: transform 0.3s ease;
-      opacity: 0; 
-      pointer-events: none; 
-      display: block; 
+      opacity: 0;
+      pointer-events: none;
+      display: block;
     }
 
     .play-button.fade-in {
@@ -105,21 +115,20 @@
       transform: scale(1.1);
     }
 
-    .information {
-
-    }
+    .information {}
 
     .camera-and-target {
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 40px; 
+      gap: 40px;
       background: rgba(0, 0, 0, 0.5);
       padding: 30px;
       border-radius: 20px;
     }
-    
-    .camera-container, .target-container {
+
+    .camera-container,
+    .target-container {
       padding: 0;
       margin: 0;
     }
@@ -127,35 +136,78 @@
     .target-container img {
       width: 730px;
       height: 470px;
-      border: none; 
-      border-radius: 0px; 
+      border: none;
+      border-radius: 0px;
     }
 
     video {
       width: 640px;
       height: 480px;
-      border: none; 
-      border-radius: 50px; 
+      border: none;
+      border-radius: 50px;
       transform: scaleX(-1);
+    }
+
+    .prediction-display {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 20px;
+      border-radius: 10px;
+      font-family: 'Orbitron', sans-serif;
+      color: #00ff00;
+      text-align: center;
+    }
+
+    .prediction-letter {
+      font-size: 48px;
+      margin: 0;
+    }
+
+    .prediction-confidence {
+      font-size: 24px;
+      margin: 10px 0 0 0;
+    }
+
+    .capture-button {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 255, 0, 0.3);
+      border: 2px solid #00ff00;
+      color: white;
+      padding: 15px 30px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 18px;
+      transition: all 0.3s ease;
+    }
+
+    .capture-button:hover {
+      background: rgba(0, 255, 0, 0.5);
     }
   </style>
 </head>
+
 <body>
 
   <!-- First Section -->
   <div class="section hero">
-    <img src="{{ url_for('static', filename='title.png') }}"
-     alt="Welcome Title"
-     style="display: block; margin: 0 auto; width: 65%; height: auto;" />
+    <img src="{{ url_for('static', filename='title.png') }}" alt="Welcome Title"
+      style="display: block; margin: 0 auto; width: 65%; height: auto;" />
     <h3 id="subtitle"></h3>
-    <img id="play-button" class="play-button" src="{{ url_for('static', filename='play_button.png') }}" alt="Play Button" />
+    <img id="play-button" class="play-button" src="{{ url_for('static', filename='play_button.png') }}"
+      alt="Play Button" />
   </div>
 
   <div class="divider"></div>
 
   <div class="section" id="second-section">
     <h1> Purpose of this project here<br>Instructions here
-      </h1>
+    </h1>
   </div>
 
 
@@ -168,13 +220,18 @@
 
     <!-- Camera + Square Box Align Box -->
     <div class="camera-and-target">
-    <div class="camera-container">
-      <video id="camera" autoplay></video>
+      <div class="camera-container">
+        <video id="camera" autoplay playsinline></video>
+        <div class="prediction-display">
+          <p class="prediction-letter" id="prediction-letter">-</p>
+          <p class="prediction-confidence" id="prediction-confidence">0%</p>
+        </div>
+        <button class="capture-button" id="capture-button">Start</button>
+      </div>
+      <div class="target-container">
+        <img src="{{ url_for('static', filename='target-square.png') }}" alt="Target Square" />
+      </div>
     </div>
-    <div class="target-container">
-      <img src="{{ url_for('static', filename='target-square.png') }}" alt="Target Square" />
-    </div>
-  </div>
   </div>
 
   <div class="divider"></div>
@@ -184,50 +241,86 @@
   </div>
 
   <script>
-    // Text setting
-    const subtitleLines = [
-      "Experience how this can make our space💫 better"
-    ];
-  
-    const subtitleElement = document.getElementById("subtitle");
-    const playButton = document.getElementById("play-button");
-  
-    let subtitleIndex = 0;
-    let subtitleLineIndex = 0;
-  
-    // subtitle typing effect
-    function typeSubtitle() {
-      if (subtitleLineIndex < subtitleLines.length) {
-        if (subtitleIndex < subtitleLines[subtitleLineIndex].length) {
-          subtitleElement.innerHTML += subtitleLines[subtitleLineIndex].charAt(subtitleIndex++);
-          setTimeout(typeSubtitle, 60);
-        } else {
-          subtitleElement.innerHTML += "<br>";
-          subtitleLineIndex++;
-          subtitleIndex = 0;
-          setTimeout(typeSubtitle, 500);
-        }
-      } else {
-        playButton.classList.add('fade-in');
+    // Initialize Socket.IO
+    const socket = io({
+      transports: ['websocket'],
+      upgrade: false
+    });
+
+    // Socket.IO event handlers
+    socket.on('connect', () => {
+      console.log('Connected to server');
+      document.getElementById('prediction-letter').textContent = 'Connected';
+    });
+
+    socket.on('disconnect', () => {
+      console.log('Disconnected from server');
+      document.getElementById('prediction-letter').textContent = 'Disconnected';
+    });
+
+    socket.on('prediction', (data) => {
+      document.getElementById('prediction-letter').textContent = data.letter || '-';
+      document.getElementById('prediction-confidence').textContent = 
+        data.confidence ? `${(data.confidence * 100).toFixed(1)}%` : '0%';
+    });
+
+    // Webcam setup
+    const video = document.getElementById('camera');
+    const captureButton = document.getElementById('capture-button');
+    let stream = null;
+    let captureInterval = null;
+
+    async function setupCamera() {
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            width: { ideal: 640 },
+            height: { ideal: 480 },
+            facingMode: 'user'
+          }
+        });
+        video.srcObject = stream;
+        console.log('Camera initialized successfully');
+      } catch (error) {
+        console.error('Error accessing camera:', error);
+        alert('Could not access the camera. Please make sure you have granted camera permissions.');
       }
     }
-  
-    typeSubtitle();
-  
-    playButton.addEventListener('click', function () {
-      const thirdSection = document.getElementById('third-section');
-      thirdSection.scrollIntoView({ behavior: 'smooth' });
+
+    // Function to capture and send frame
+    function captureAndSendFrame() {
+      if (!stream) return;
+
+      const canvas = document.createElement('canvas');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(video, 0, 0);
+      
+      const base64Image = canvas.toDataURL('image/jpeg').split(',')[1];
+      if (base64Image) {
+        socket.emit('frame', base64Image);
+      }
+    }
+
+    // Start/Stop button handler
+    captureButton.addEventListener('click', () => {
+      if (captureInterval) {
+        clearInterval(captureInterval);
+        captureInterval = null;
+        captureButton.textContent = 'Start';
+      } else {
+        if (!stream) {
+          setupCamera();
+        }
+        captureInterval = setInterval(captureAndSendFrame, 100); // 10 FPS
+        captureButton.textContent = 'Stop';
+      }
     });
-  
-    // Access Webcam
-    navigator.mediaDevices.getUserMedia({ video: true })
-      .then(stream => {
-        const video = document.getElementById('camera');
-        video.srcObject = stream;
-      })
-      .catch(error => {
-        console.error("Camera access error:", error);
-      });
+
+    // Initialize camera when page loads
+    setupCamera();
   </script>
 </body>
+
 </html>
