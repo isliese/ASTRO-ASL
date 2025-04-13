@@ -72,9 +72,9 @@ def handle_frame(data):
         })
 
         # Debug display
-        cv2.imshow('WebSocket Frame', frame)
-        if cv2.waitKey(1) == 27:  # ESC
-            exit(0)
+      #  cv2.imshow('WebSocket Frame', frame)
+      #  if cv2.waitKey(1) == 27:  # ESC
+      #      exit(0)
 
     except Exception as e:
         print(f"Error processing frame: {e}")
