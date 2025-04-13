@@ -61,6 +61,7 @@ Sound doesn’t travel in the vacuum of space, making traditional spoken communi
    # Using your own dataset, you can train your model using:
    # Only tested using dataset below. May require customization
    # for custom datasets.
+   # https://www.kaggle.com/datasets/ayuraj/american-sign-language-dataset
    python training_model.py
    ```
 6. **Run Application**:
