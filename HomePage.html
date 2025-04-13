@@ -65,12 +65,10 @@
     .section.hero h1, .section.hero h3 {
       transition: font-family 0.5s ease;
     }
-
     .section.hero h1 {
       font-size: 4rem;
       margin-bottom: 20px;
     }
-
     .section.hero h3 {
       font-size: 1.5rem;
       line-height: 1.6;
@@ -81,16 +79,9 @@
 
     /* Fade-in animation */
     @keyframes fadeInUp {
-      0% {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
     }
-
     .play-button {
       width: 150px;
       height: auto;
@@ -101,19 +92,17 @@
       pointer-events: none; 
       display: block; 
     }
-
     .play-button.fade-in {
       animation: fadeInUp 1s ease-out forwards;
       pointer-events: auto;
     }
-
     .play-button:hover {
       transform: scale(1.1);
     }
 
     /* Second Section */
     .information {
-      /* Add additional styles if needed */
+      /* (Add additional styles if needed) */
     }
 
     /* Third Section */
@@ -145,20 +134,34 @@
       padding: 0;
       margin: 0;
     }
-
-    .target-container img {
-      width: 730px;
-      height: 470px;
-      border: none; 
-      border-radius: 0px; 
-    }
-
+    /* Ensure video displays as a black placeholder initially */
     video {
       width: 640px;
       height: 480px;
-      border: none; 
-      border-radius: 50px; 
+      border: none;
+      border-radius: 50px;
       transform: scaleX(-1);
+      background-color: black;
+    }
+    /* Target container with overlayed prediction result */
+    .target-container {
+      position: relative;
+      width: 730px;
+      height: 470px;
+    }
+    .target-container img {
+      width: 100%;
+      height: 100%;
+      border: none; 
+      border-radius: 0;
+    }
+    #prediction-result {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-size: 24px;
     }
 
     /* Fourth Section */
@@ -167,13 +170,11 @@
       font-weight: bold;
       line-height: 1.2;
     }
-
     .profile {
       position: relative;
       display: inline-block;
       overflow: hidden;
     }
-
     .profile img {
       display: block;
       width: 200px;
@@ -181,7 +182,6 @@
       border-radius: 30%;
       transition: transform 0.3s ease, filter 0.3s ease;
     }
-
     .profile .overlay-text {
       position: absolute;
       top: 50%;
@@ -196,16 +196,13 @@
       transition: opacity 0.3s ease;
       pointer-events: none;
     }
-
     .profile:hover img {
       filter: grayscale(100%);
       transform: scale(1.05);
     }
-
     .profile:hover .overlay-text {
       opacity: 1;
     }
-
     .profile-links {
       display: flex;
       justify-content: center;
@@ -213,7 +210,6 @@
       gap: 74px;
       margin-top: 20px;
     }
-
     .profile-links img {
       height: auto;
       width: auto;
@@ -250,7 +246,6 @@
       Purpose of Astro ASL
       <br />
     </h1>
-    
     <h2>
       No sound in space. No problem. American Sign Language is redefining
       astronaut communication.
@@ -263,11 +258,11 @@
   <!-- Divider -->
   <div class="divider"></div>
 
-  <!-- Third Section with Camera -->
+  <!-- Third Section with Camera and Target -->
   <div class="section" id="third-section">
     <!-- Camera and Target with Labels -->
     <div class="camera-and-target">
-      <div class="camera-wrapper">
+      <div class="camera-wrapper" style="display: flex;">
          <!-- Label above camera -->
          <div class="label">Sign Language</div>
          <div class="camera-container">
@@ -279,16 +274,15 @@
          <div class="label">Transcription</div>
          <div class="target-container">
            <img src="{{ url_for('static', filename='target-square.png') }}" alt="Target Square" />
+           <div id="prediction-result"></div>
          </div>
       </div>
     </div>
     
-    <!-- Print prediction result -->
-    <div id="prediction-result" style="color: white; font-size: 24px; margin-top: 10px;"></div>
-
     <!-- Toggle Camera Button (Image click toggles camera and label visibility) -->
     <div>
-      <img id="toggleCameraBtn" src="{{ url_for('static', filename='close-button.png') }}" alt="Toggle Camera" onclick="toggleCamera()" />
+      <!-- Initially show start-button icon -->
+      <img id="toggleCameraBtn" src="{{ url_for('static', filename='start-button.png') }}" alt="Toggle Camera" onclick="toggleCamera()" />
     </div>
   </div>
 
@@ -299,7 +293,6 @@
   <div class="section" id="fourth-section">
     <br><br>
     <h1 class="big-title">Meet the Team</h1>
-
     <div class="profile-links">
       <!-- Jay -->
       <div class="profile jay-profile">
@@ -333,19 +326,16 @@
     <h3>Made with 🤍</h3>
   </div>
   
-  <!-- Script Section inside body -->
+  <!-- Script Section -->
   <script>
     // Typing effect for subtitle and play button activation
     const subtitleLines = [
       "Experience how this can make our space💫 better"
     ];
-  
     const subtitleElement = document.getElementById("subtitle");
     const playButton = document.getElementById("play-button");
-  
     let subtitleIndex = 0;
     let subtitleLineIndex = 0;
-  
     function typeSubtitle() {
       if (subtitleLineIndex < subtitleLines.length) {
         if (subtitleIndex < subtitleLines[subtitleLineIndex].length) {
@@ -361,73 +351,70 @@
         playButton.classList.add('fade-in');
       }
     }
-  
     typeSubtitle();
-  
     playButton.addEventListener('click', function () {
       const thirdSection = document.getElementById('third-section');
       thirdSection.scrollIntoView({ behavior: 'smooth' });
     });
   
-    // Global variable to track camera state
-    let cameraOn = true;
-  
-    // Toggle Camera function with image swap and wrapper visibility toggle
-    function toggleCamera() {
-      const cameraWrapper = document.querySelector(".camera-wrapper");
-      const toggleBtn = document.getElementById("toggleCameraBtn");
-      if (cameraOn) {
-        // Hide camera and its label when turning off
-        cameraWrapper.style.display = "none";
-        toggleBtn.src = "{{ url_for('static', filename='start-button.png') }}";
-        cameraOn = false;
-      } else {
-        // Show camera and its label when turning on
-        cameraWrapper.style.display = "flex";
-        toggleBtn.src = "{{ url_for('static', filename='close-button.png') }}";
-        cameraOn = true;
-      }
-    }
-  
-    // Access and display webcam stream
-    navigator.mediaDevices.getUserMedia({ video: true })
-      .then(stream => {
-        const video = document.getElementById('camera');
-        video.srcObject = stream;
-      })
-      .catch(error => {
-        console.error("Camera access error:", error);
-      });
-  </script>
-  
-  <!-- Socket.IO and webcam frame transmission -->
-  <script src="https://cdn.socket.io/4.3.2/socket.io.min.js"></script>
-  <script>
+    // Global variables for camera control and streaming
+    let cameraOn = false;
+    let currentStream = null;
+    let streamingInterval = null;
     const video = document.getElementById('camera');
     const canvas = document.createElement('canvas');
     const context = canvas.getContext('2d');
     const socket = io();
-
-    navigator.mediaDevices.getUserMedia({ video: true })
-      .then((stream) => {
-        video.srcObject = stream;
-        video.play();
-        setInterval(() => {
-          canvas.width = video.videoWidth;
-          canvas.height = video.videoHeight;
-          context.drawImage(video, 0, 0, canvas.width, canvas.height);
-          const frameData = canvas.toDataURL('image/jpeg');
-          socket.emit('frame', frameData);
-        }, 200); // every 0.2 seconds
-      })
-      .catch((err) => {
-        console.error("Fail to access Webcam:", err);
-      });
-
+  
+    // Toggle Camera function with start/close behavior
+    function toggleCamera() {
+      const cameraWrapper = document.querySelector(".camera-wrapper");
+      const toggleBtn = document.getElementById("toggleCameraBtn");
+      if (!cameraOn) {
+        // Turn camera on: ensure camera area is visible and start streaming
+        cameraWrapper.style.display = "flex";
+        navigator.mediaDevices.getUserMedia({ video: true })
+          .then(stream => {
+            currentStream = stream;
+            video.srcObject = stream;
+            video.play();
+            // Start sending frames every 200 ms via socket
+            streamingInterval = setInterval(() => {
+              canvas.width = video.videoWidth;
+              canvas.height = video.videoHeight;
+              context.drawImage(video, 0, 0, canvas.width, canvas.height);
+              const frameData = canvas.toDataURL('image/jpeg');
+              socket.emit('frame', frameData);
+            }, 200);
+          })
+          .catch(error => {
+            console.error("Camera access error:", error);
+          });
+        toggleBtn.src = "{{ url_for('static', filename='close-button.png') }}";
+        cameraOn = true;
+      } else {
+        // Turn camera off: stop streaming and hide the camera area
+        if (currentStream) {
+          currentStream.getTracks().forEach(track => track.stop());
+          currentStream = null;
+        }
+        if (streamingInterval) {
+          clearInterval(streamingInterval);
+          streamingInterval = null;
+        }
+        video.srcObject = null;
+        cameraWrapper.style.display = "none";
+        toggleBtn.src = "{{ url_for('static', filename='start-button.png') }}";
+        cameraOn = false;
+      }
+    }
+  
+    // Socket listener for prediction results; update prediction result overlay
     socket.on('prediction', (data) => {
       const { letter, confidence } = data;
       document.getElementById('prediction-result').innerText = `Prediction: ${letter} (${confidence}%)`;
     });
   </script>
+  
 </body>
 </html>
