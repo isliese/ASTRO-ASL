@@ -14,6 +14,7 @@ capture = cv.VideoCapture(0)
 # check if camera opens (allow mac permissions possibly)
 if not capture.isOpened():
     print("Cannot open camera")
+    print("Please check your access to camera")
     exit()
 
 while True:
@@ -29,7 +30,7 @@ while True:
 
     # show video
     cv.imshow('frame', gray)
-    if cv.waitKey(1) == ord('q'):
+    if cv.waitKey(1) == ord('q'): # press 'q' to quit
         break
 
 capture.release()
