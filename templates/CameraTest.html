@@ -1,33 +1,161 @@
-<!-- templates/CameraTest.html -->
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Camera Test</title>
-    <style>
-        video {
-            width: 640px;
-            height: 480px;
-            border: 2px solid black;
-            border-radius: 10px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Welcome to _____</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron&family=Press+Start+2P&family=Fira+Code&family=Rubik+Mono+One&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #010021;
+      color: white;
+      font-family: Arial, sans-serif;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image: url("{{ url_for('static', filename='space_background.webp') }}");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      opacity: 0.4;
+      z-index: -1;
+    }
+
+    .section {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .section.hero h1, .section.hero h3 {
+      transition: font-family 0.5s ease;
+    }
+
+    .section.hero h1 {
+      font-size: 4rem;
+      margin-bottom: 20px;
+    }
+
+    .section.hero h3 {
+      font-size: 1.5rem;
+      line-height: 1.6;
+      background-color: rgba(0, 0, 0, 0.4);
+      padding: 10px 20px;
+      border-radius: 10px;
+      min-height: 5em;
+    }
+
+    .camera-container {
+      background: rgba(0, 0, 0, 0.5);
+      padding: 20px;
+      border-radius: 20px;
+    }
+
+    video {
+      width: 640px;
+      height: 480px;
+      border: 4px solid white;
+      border-radius: 10px;
+    }
+  </style>
 </head>
 <body>
-    <h1>Live Webcam Feed</h1>
-    <video id="webcam" autoplay playsinline></video>
+  <!-- First Screen -->
+  <div class="section hero">
+    <h1 id="title"></h1>
+    <h3 id="subtitle"></h3>
+  </div>
 
-    <script>
-        const video = document.getElementById('webcam');
+  <!-- Screen after scrolling -->
+  <div class="section">
+    <div class="camera-container">
+      <video id="camera" autoplay></video>
+    </div>
+  </div>
 
-        // Request access to webcam
-        navigator.mediaDevices.getUserMedia({ video: true, audio: false })
-            .then((stream) => {
-                video.srcObject = stream;
-            })
-            .catch((error) => {
-                console.error("Failed to access webcam:", error);
-                alert("Unable to access the webcam. Please allow camera permission.");
-            });
-    </script>
+  <script>
+    // Typing animation setup
+    const titleText = "Welcome to _____";
+    const subtitleLines = [
+      "Give application access",
+      "Turn on your camera",
+      "Let’s do it!"
+    ];
+
+    const titleElement = document.getElementById("title");
+    const subtitleElement = document.getElementById("subtitle");
+
+    let titleIndex = 0;
+    let subtitleIndex = 0;
+    let subtitleLineIndex = 0;
+
+    // Function to type the title one character at a time
+    function typeTitle() {
+      if (titleIndex < titleText.length) {
+        titleElement.textContent += titleText.charAt(titleIndex++);
+        setTimeout(typeTitle, 80);
+      } else {
+        // When title typing is complete, start subtitle typing
+        typeSubtitle();
+      }
+    }
+
+    // Function to type subtitle lines one by one
+    function typeSubtitle() {
+      if (subtitleLineIndex < subtitleLines.length) {
+        if (subtitleIndex < subtitleLines[subtitleLineIndex].length) {
+          subtitleElement.innerHTML += subtitleLines[subtitleLineIndex].charAt(subtitleIndex++);
+          setTimeout(typeSubtitle, 60);
+        } else {
+          subtitleElement.innerHTML += "<br>";
+          subtitleLineIndex++;
+          subtitleIndex = 0;
+          setTimeout(typeSubtitle, 500);
+        }
+      } else {
+        // Start changing font only after all typing is done
+        startFontCycle();
+      }
+    }
+
+    // List of fonts to cycle through (we have to decide what fonts are we gonna have)
+    const fonts = [
+      "Orbitron, sans-serif",
+      "'Press Start 2P', cursive",
+      "'Fira Code', monospace",
+      "'Rubik Mono One', sans-serif"
+    ];
+
+    // Function to randomly change font of the title every 3 seconds
+    function startFontCycle() {
+      setInterval(() => {
+        const randomFont = fonts[Math.floor(Math.random() * fonts.length)];
+        titleElement.style.fontFamily = randomFont;
+      }, 1000);
+    }
+
+    // Start typing the title on page load
+    typeTitle();
+
+    // Enable camera
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => {
+        const video = document.getElementById('camera');
+        video.srcObject = stream;
+      })
+      .catch(error => {
+        console.error("Camera access error:", error);
+      });
+  </script>
 </body>
 </html>

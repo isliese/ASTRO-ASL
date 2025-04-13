@@ -9,3 +9,9 @@ Let's win! 🥹🥰😋
 * Ctrl+Shift+P (Cmd+Shift+P on Mac)
 * Search “Python: Select Interpreter”
 * Select .venv one
+
+3. To automatically write requirements on 'requirements.txt' whenever you newly install libraries
+`pip freeze > requirements.txt`
+
+4. To install all the required libraries to run the program
+`pip install -r requirements.txt`
