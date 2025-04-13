@@ -6,6 +6,25 @@ import kagglehub
 import os
 import json
 
+
+#generate label map for 
+def generate_label_map(data_dir, output_file='label_map.json'):
+    label_map = {}
+
+    for folder_name in os.listdir(data_dir):
+        folder_path = os.path.join(data_dir, folder_name)
+        if os.path.isdir(folder_path):
+            for img_name in os.listdir(folder_path):
+                if img_name.lower().endswith(('.jpg', '.jpeg')):
+                    label = img_name[0].lower()
+                    if label not in label_map:
+                        label_map[label] = len(label_map)
+
+    with open(output_file, 'w') as f:
+        json.dump(label_map, f)
+
+    return label_map
+
 #Load the data set
 path = kagglehub.dataset_download("ayuraj/american-sign-language-dataset")
 print("Path to dataset files:", path)
@@ -30,20 +49,3 @@ img_array = np.expand_dims(img_array, axis=0)  # Add batch dimension
 pred = model.predict(img_array)
 predicted_label = reverse_label_map[np.argmax(pred)]
 print("Predicted label:", predicted_label)
-
-def generate_label_map(data_dir, output_file='label_map.json'):
-    label_map = {}
-
-    for folder_name in os.listdir(data_dir):
-        folder_path = os.path.join(data_dir, folder_name)
-        if os.path.isdir(folder_path):
-            for img_name in os.listdir(folder_path):
-                if img_name.lower().endswith(('.jpg', '.jpeg')):
-                    label = img_name[0].lower()
-                    if label not in label_map:
-                        label_map[label] = len(label_map)
-
-    with open(output_file, 'w') as f:
-        json.dump(label_map, f)
-
-    return label_map
