@@ -1,27 +1,25 @@
-# import necessary libraries
+# Import necessary libraries
 import os
 import cv2
 import numpy as np
 import tensorflow as tf
 import keras
-import kagglehub
-
+import random
+from tensorflow.keras import layers, models
 from sklearn.model_selection import train_test_split
 
-# Download dataset from Kaggle
-path = kagglehub.dataset_download("ayuraj/american-sign-language-dataset")
-print("Path to dataset files:", path)
-print("Files in dataset path:", os.listdir(path))  # Debugging line
+data_dir = './asl'
 
-# Update to match actual folder inside the dataset
-data_dir = os.path.join(path, 'asl')  # Adjust if folder name differs
+# Remove number data
+for i in range(0, 9):
+    os.remove('./asl/' + str(i))
 
 # Define the percentage of data to sample
-sample_percentage = 0.01  # 10% of the data
+sample_percentage = 0.005  # 0.5% of the data
 
 # Function to sample a percentage of data
 def sample_data(data_dir, sample_percentage):
-    sampled_data_dir = path
+    sampled_data_dir = './sampled_asl'
     if not os.path.exists(sampled_data_dir):
         os.makedirs(sampled_data_dir)
 
@@ -52,9 +50,15 @@ data_dir = sample_data(data_dir, sample_percentage)
 # Check if the data directory exists
 if not os.path.exists(data_dir):
     print(f"Data directory '{data_dir}' does not exist.")
-    exit()
+    exit() 
 
-def load_data(data_dir):
+def add_gaussian_noise(image, mean=0, stddev=0.1):
+    row, col, ch = image.shape
+    gauss = np.random.normal(mean, stddev, (row, col, ch))
+    noisy = np.clip(image + gauss, 0, 255)  # Ensure the pixel values are in [0, 255]
+    return noisy.astype(np.uint8)
+
+def load_data(data_dir, add_noise=False):
     images = []
     labels = []
     label_map = {}  # To map gestures to integer labels
@@ -70,7 +74,7 @@ def load_data(data_dir):
                 if img_name.endswith('.jpg') or img_name.endswith('.jpeg'):
                     img_path = os.path.join(folder_path, img_name)
                     img = cv2.imread(img_path)
-                    img = cv2.resize(img, (224, 224))  # Resize image to 224x224
+                    img = cv2.resize(img, (200, 200))
 
                     # Extract the label (first letter of the filename)
                     label = img_name[0].lower()
@@ -78,10 +82,10 @@ def load_data(data_dir):
                     # Convert label to integer if not already mapped
                     if label not in label_map:
                         label_map[label] = len(label_map)
-                    
-                    # Convert label to integer if not already mapped
-                    if label not in label_map:
-                        label_map[label] = len(label_map)
+
+                    # Optionally add noise
+                    if add_noise:
+                        img = add_gaussian_noise(img)
 
                     images.append(img)
                     labels.append(label_map[label])
@@ -91,11 +95,12 @@ def load_data(data_dir):
 
     return images, labels, label_map
 
-# Load data
-images, labels, label_map = load_data(data_dir)
+# Load data with noise added
+images, labels, label_map = load_data(data_dir, add_noise=True)
 
 # Normalize pixel values to be between 0 and 1
 images = images / 255.0
+
 
 # One-hot encode the labels
 labels = keras.utils.to_categorical(labels)
@@ -109,7 +114,8 @@ print(f"Testing samples: {len(X_test)}")
 
 # Define the model
 model = keras.Sequential([
-    keras.layers.Conv2D(32, (3, 3), activation='relu', input_shape=(224, 224, 3)),
+    keras.layers.Input(shape=(200, 200, 3)),
+    keras.layers.Conv2D(32, (3, 3), activation='relu'),
     keras.layers.MaxPooling2D((2, 2)),
     keras.layers.Conv2D(64, (3, 3), activation='relu'),
     keras.layers.MaxPooling2D((2, 2)),
@@ -126,7 +132,7 @@ model.compile(optimizer='adam',
               metrics=['accuracy'])
 
 # Train the model
-model.fit(X_train, y_train, epochs=10, batch_size=32, validation_data=(X_test, y_test))
+model.fit(X_train, y_train, epochs=50, batch_size=32, validation_data=(X_test, y_test))
 
 # Evaluate the model
 loss, accuracy = model.evaluate(X_test, y_test)

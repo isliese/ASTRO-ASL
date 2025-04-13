@@ -7,3 +7,5 @@ asl/
 .vscode/
 model.keras
 model.h5
+sampled_asl/
+.env
