@@ -40,7 +40,7 @@
       }
     }
     
-    /* Section in general */
+    /* Section styles */
     .section {
       height: 100vh;
       display: flex;
@@ -52,7 +52,7 @@
       box-sizing: border-box;
     }
 
-    /* Divider in general */
+    /* Divider style */
     .divider {
       width: 100%;
       max-width: 1514px;
@@ -79,7 +79,7 @@
       min-height: 5em;
     }
 
-    /* Fade in Animation */
+    /* Fade-in animation */
     @keyframes fadeInUp {
       0% {
         opacity: 0;
@@ -113,7 +113,7 @@
 
     /* Second Section */
     .information {
-      /* (Add styles here if needed) */
+      /* Add additional styles if needed */
     }
 
     /* Third Section */
@@ -265,7 +265,7 @@
 
   <!-- Third Section with Camera -->
   <div class="section" id="third-section">
-    <!-- Camera and Square with Labels -->
+    <!-- Camera and Target with Labels -->
     <div class="camera-and-target">
       <div class="camera-wrapper">
          <!-- Label above camera -->
@@ -286,7 +286,7 @@
     <!-- Print prediction result -->
     <div id="prediction-result" style="color: white; font-size: 24px; margin-top: 10px;"></div>
 
-    <!-- Toggle Camera Button (Image click to toggle camera) -->
+    <!-- Toggle Camera Button (Image click toggles camera and label visibility) -->
     <div>
       <img id="toggleCameraBtn" src="{{ url_for('static', filename='close-button.png') }}" alt="Toggle Camera" onclick="toggleCamera()" />
     </div>
@@ -369,16 +369,23 @@
       thirdSection.scrollIntoView({ behavior: 'smooth' });
     });
   
-    // Toggle Camera function with image swap for button
+    // Global variable to track camera state
+    let cameraOn = true;
+  
+    // Toggle Camera function with image swap and wrapper visibility toggle
     function toggleCamera() {
-      const cameraContainer = document.querySelector(".camera-container");
+      const cameraWrapper = document.querySelector(".camera-wrapper");
       const toggleBtn = document.getElementById("toggleCameraBtn");
-      if (cameraContainer.style.display === "none" || cameraContainer.style.display === "") {
-        cameraContainer.style.display = "block";
-        toggleBtn.src = "{{ url_for('static', filename='close-button.png') }}";
-      } else {
-        cameraContainer.style.display = "none";
+      if (cameraOn) {
+        // Hide camera and its label when turning off
+        cameraWrapper.style.display = "none";
         toggleBtn.src = "{{ url_for('static', filename='start-button.png') }}";
+        cameraOn = false;
+      } else {
+        // Show camera and its label when turning on
+        cameraWrapper.style.display = "flex";
+        toggleBtn.src = "{{ url_for('static', filename='close-button.png') }}";
+        cameraOn = true;
       }
     }
   
