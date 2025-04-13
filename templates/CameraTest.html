@@ -1,34 +1,94 @@
-<!-- templates/CameraTest.html -->
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Camera Test</title>
-    <style>
-        video {
-            width: 640px;
-            height: 480px;
-            border: 2px solid black;
-            border-radius: 10px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Welcome to _____</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #010021;
+      color: white;
+      font-family: Arial, sans-serif;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image: url("{{ url_for('static', filename='space_background.webp') }}");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      opacity: 0.4;
+      z-index: -1;
+    }
+
+    .section {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .section.hero h1 {
+      font-size: 4rem;
+      margin-bottom: 20px;
+    }
+
+    .section.hero h3 {
+      font-size: 1.5rem;
+      line-height: 1.6;
+      background-color: rgba(0, 0, 0, 0.4);
+      padding: 10px 20px;
+      border-radius: 10px;
+    }
+
+    .camera-container {
+      background: rgba(0, 0, 0, 0.5);
+      padding: 20px;
+      border-radius: 20px;
+    }
+
+    video {
+      width: 640px;
+      height: 480px;
+      border: 4px solid white;
+      border-radius: 10px;
+    }
+  </style>
 </head>
 <body>
-    <h1>Live Webcam Feed</h1>
-    <video id="webcam" autoplay playsinline></video>
+  <!-- 첫 화면 -->
+  <div class="section hero">
+    <h1>Welcome to _____</h1>
+    <h3>
+      Give application access<br>
+      Turn on your camera<br>
+      Let’s do it!
+    </h3>
+  </div>
 
-    <script>
-        const video = document.getElementById('webcam');
+  <!-- 스크롤 후 나오는 화면 -->
+  <div class="section">
+    <div class="camera-container">
+      <video id="camera" autoplay></video>
+    </div>
+  </div>
 
-        // Request access to webcam
-        navigator.mediaDevices.getUserMedia({ video: true, audio: false })
-            .then((stream) => {
-                video.srcObject = stream;
-            })
-            // When there's error
-            .catch((error) => {
-                console.error("Failed to access webcam:", error);
-                alert("Unable to access the webcam. Please allow camera permission.");
-            });
-    </script>
+  <script>
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => {
+        const video = document.getElementById('camera');
+        video.srcObject = stream;
+      })
+      .catch(error => {
+        console.error("Camera access error:", error);
+      });
+  </script>
 </body>
 </html>
