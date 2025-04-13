@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>Welcome to _____</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron&family=Press+Start+2P&family=Fira+Code&family=Rubik+Mono+One&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
@@ -35,6 +37,10 @@
       padding: 20px;
     }
 
+    .section.hero h1, .section.hero h3 {
+      transition: font-family 0.5s ease;
+    }
+
     .section.hero h1 {
       font-size: 4rem;
       margin-bottom: 20px;
@@ -46,6 +52,7 @@
       background-color: rgba(0, 0, 0, 0.4);
       padding: 10px 20px;
       border-radius: 10px;
+      min-height: 5em;
     }
 
     .camera-container {
@@ -63,17 +70,13 @@
   </style>
 </head>
 <body>
-  <!-- 첫 화면 -->
+  <!-- First Screen -->
   <div class="section hero">
-    <h1>Welcome to _____</h1>
-    <h3>
-      Give application access<br>
-      Turn on your camera<br>
-      Let’s do it!
-    </h3>
+    <h1 id="title"></h1>
+    <h3 id="subtitle"></h3>
   </div>
 
-  <!-- 스크롤 후 나오는 화면 -->
+  <!-- Screen after scrolling -->
   <div class="section">
     <div class="camera-container">
       <video id="camera" autoplay></video>
@@ -81,6 +84,70 @@
   </div>
 
   <script>
+    // Typing animation setup
+    const titleText = "Welcome to _____";
+    const subtitleLines = [
+      "Give application access",
+      "Turn on your camera",
+      "Let’s do it!"
+    ];
+
+    const titleElement = document.getElementById("title");
+    const subtitleElement = document.getElementById("subtitle");
+
+    let titleIndex = 0;
+    let subtitleIndex = 0;
+    let subtitleLineIndex = 0;
+
+    // Function to type the title one character at a time
+    function typeTitle() {
+      if (titleIndex < titleText.length) {
+        titleElement.textContent += titleText.charAt(titleIndex++);
+        setTimeout(typeTitle, 80);
+      } else {
+        // When title typing is complete, start subtitle typing
+        typeSubtitle();
+      }
+    }
+
+    // Function to type subtitle lines one by one
+    function typeSubtitle() {
+      if (subtitleLineIndex < subtitleLines.length) {
+        if (subtitleIndex < subtitleLines[subtitleLineIndex].length) {
+          subtitleElement.innerHTML += subtitleLines[subtitleLineIndex].charAt(subtitleIndex++);
+          setTimeout(typeSubtitle, 60);
+        } else {
+          subtitleElement.innerHTML += "<br>";
+          subtitleLineIndex++;
+          subtitleIndex = 0;
+          setTimeout(typeSubtitle, 500);
+        }
+      } else {
+        // Start changing font only after all typing is done
+        startFontCycle();
+      }
+    }
+
+    // List of fonts to cycle through (we have to decide what fonts are we gonna have)
+    const fonts = [
+      "Orbitron, sans-serif",
+      "'Press Start 2P', cursive",
+      "'Fira Code', monospace",
+      "'Rubik Mono One', sans-serif"
+    ];
+
+    // Function to randomly change font of the title every 3 seconds
+    function startFontCycle() {
+      setInterval(() => {
+        const randomFont = fonts[Math.floor(Math.random() * fonts.length)];
+        titleElement.style.fontFamily = randomFont;
+      }, 1000);
+    }
+
+    // Start typing the title on page load
+    typeTitle();
+
+    // Enable camera
     navigator.mediaDevices.getUserMedia({ video: true })
       .then(stream => {
         const video = document.getElementById('camera');
