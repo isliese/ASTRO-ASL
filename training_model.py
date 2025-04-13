@@ -41,6 +41,20 @@ def sample_data(data_dir, sample_percentage):
             for img_name in sampled_images:
                 img_path = os.path.join(folder_path, img_name)
                 sampled_img_path = os.path.join(sampled_folder_path, img_name)
+
+                # Check if the file already exists at the target location
+                if os.path.exists(sampled_img_path):
+                    # If file exists, create a unique name by appending a counter
+                    base, ext = os.path.splitext(img_name)
+                    counter = 1
+                    new_img_name = f"{base}_{counter}{ext}"
+                    sampled_img_path = os.path.join(sampled_folder_path, new_img_name)
+                    while os.path.exists(sampled_img_path):
+                        counter += 1
+                        new_img_name = f"{base}_{counter}{ext}"
+                        sampled_img_path = os.path.join(sampled_folder_path, new_img_name)
+
+                # Move the image
                 os.rename(img_path, sampled_img_path)
 
     return sampled_data_dir
