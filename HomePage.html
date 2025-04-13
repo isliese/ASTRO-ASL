@@ -111,6 +111,9 @@
       margin: 0;
     }
     /* Video element with black placeholder initially */
+    .camera-container {
+      position: relative;
+    }
     video {
       width: 640px;
       height: 480px;
@@ -118,6 +121,31 @@
       border-radius: 50px;
       transform: scaleX(-1);
       background-color: black;
+    }
+    /* Countdown Overlay styling */
+    #countdown-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 80px;
+      color: white;
+      pointer-events: none;
+    }
+    /* Flash Overlay styling */
+    #flash-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(255,255,255,0.5);
+      display: none;
+      pointer-events: none;
     }
     /* Target container with prediction overlay and confidence footer */
     .target-container {
@@ -228,8 +256,10 @@
     <h1>Purpose of Astro ASL<br /></h1>
     <h2>No sound in space. No problem. American Sign Language is redefining astronaut communication.</h2>
     <h3>
-      In the vacuum of space, sound can't travel, and ASL offers a silent, efficient solution. Astro ASL demonstrates how sign language enables clear communication between astronauts.
-      Our platform uses a trained machine learning model to detect ASL signs in real time through webcam input. Powered by deep learning and computer vision, the system interprets gestures accurately and instantly.
+      In the vacuum of space, sound can't travel, and ASL offers a silent, efficient solution.
+      Astro ASL demonstrates how sign language enables clear communication between astronauts.
+      Our platform uses a trained machine learning model to detect ASL signs in real time through webcam input.
+      Powered by deep learning and computer vision, the system interprets gestures accurately and instantly.
     </h3>
   </div>
   <!-- Divider -->
@@ -242,6 +272,10 @@
          <div class="label">Sign Language</div>
          <div class="camera-container">
            <video id="camera" autoplay></video>
+           <!-- Countdown Overlay -->
+           <div id="countdown-overlay"></div>
+           <!-- Flash Overlay -->
+           <div id="flash-overlay"></div>
          </div>
       </div>
       <div class="target-wrapper">
@@ -330,32 +364,73 @@
     // Global variables for camera control and sentence accumulation
     let cameraOn = false;
     let currentStream = null;
-    let captureInterval = null;
     let sentence = "";
+    let captureCycleTimeoutId = null;
+  
     const video = document.getElementById('camera');
     const canvas = document.createElement('canvas');
     const context = canvas.getContext('2d');
     const socket = io();
   
-    // Toggle Camera function: start (capture every 3 sec) / stop the camera
+    // Function to perform countdown overlay before capture
+    function setCountdown(number, onComplete) {
+      if (!cameraOn) return; // cancel if camera off
+      const countdownEl = document.getElementById('countdown-overlay');
+      if (number <= 0) {
+        countdownEl.innerText = "";
+        onComplete();
+      } else {
+        countdownEl.innerText = number;
+        setTimeout(() => {
+          setCountdown(number - 1, onComplete);
+        }, 1000);
+      }
+    }
+  
+    // Function to perform flash effect
+    function flashCamera() {
+      const flashEl = document.getElementById('flash-overlay');
+      flashEl.style.display = 'block';
+      setTimeout(() => {
+        flashEl.style.display = 'none';
+      }, 100); // flash duration 100ms
+    }
+  
+    // Function to capture a snapshot and emit frame data
+    function captureSnapshot() {
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+      const frameData = canvas.toDataURL('image/jpeg');
+      socket.emit('frame', frameData);
+    }
+  
+    // Recursive function to start capture cycle (with countdown and flash)
+    function startCaptureCycle() {
+      if (!cameraOn) return; // stop if camera is off
+      // Start countdown from 3
+      setCountdown(3, () => {
+        captureSnapshot();
+        flashCamera();
+        // Schedule next capture cycle after a short delay post flash
+        captureCycleTimeoutId = setTimeout(startCaptureCycle, 300);
+      });
+    }
+  
+    // Toggle Camera function: start (with capture cycle) / stop the camera
     function toggleCamera() {
       const cameraWrapper = document.querySelector(".camera-wrapper");
       const toggleBtn = document.getElementById("toggleCameraBtn");
       if (!cameraOn) {
-        // Turn camera on: show camera wrapper and start capturing frames every 3 sec
+        // Turn camera on: show wrapper, get video stream, and start capture cycle
         cameraWrapper.style.display = "flex";
         navigator.mediaDevices.getUserMedia({ video: true })
           .then(stream => {
             currentStream = stream;
             video.srcObject = stream;
             video.play();
-            captureInterval = setInterval(() => {
-              canvas.width = video.videoWidth;
-              canvas.height = video.videoHeight;
-              context.drawImage(video, 0, 0, canvas.width, canvas.height);
-              const frameData = canvas.toDataURL('image/jpeg');
-              socket.emit('frame', frameData);
-            }, 3000);  // capture every 3 seconds
+            // Start the capture cycle with countdown
+            startCaptureCycle();
           })
           .catch(error => {
             console.error("Camera access error:", error);
@@ -363,19 +438,22 @@
         toggleBtn.src = "{{ url_for('static', filename='close-button.png') }}";
         cameraOn = true;
       } else {
-        // Turn camera off: stop stream and clear capture interval, hide camera wrapper
+        // Turn camera off: stop video stream and any pending capture cycle
         if (currentStream) {
           currentStream.getTracks().forEach(track => track.stop());
           currentStream = null;
         }
-        if (captureInterval) {
-          clearInterval(captureInterval);
-          captureInterval = null;
+        if (captureCycleTimeoutId) {
+          clearTimeout(captureCycleTimeoutId);
         }
         video.srcObject = null;
         cameraWrapper.style.display = "none";
         toggleBtn.src = "{{ url_for('static', filename='start-button.png') }}";
         cameraOn = false;
+        // Reset accumulated sentence when camera is turned off (옵션)
+        sentence = "";
+        document.getElementById('prediction-result').innerText = "";
+        document.getElementById('prediction-confidence').innerText = "";
       }
     }
   
