@@ -103,7 +103,7 @@
         margin-top: -50px;
         cursor: pointer;
         transition: transform 0.3s ease;
-        opacity: 0;
+        opacity: 1;
         pointer-events: none;
         display: block;
       }
@@ -166,19 +166,23 @@
         src="{{ url_for('static', filename='play_button.png') }}"
         alt="Play Button"
       />
+
     </div>
 
     <div class="section" id="second-section">
       <h1>
-        Purpose of Astro ASL <br />
+        Purpose of Astro ASL
         <br />
         <!--And How We Made It Happen !-->
       </h1>
-
+      
       <h2>
         No sound in space. No problem. American Sign Language is redefining
         astronaut communication.
       </h2>
+      <h3>
+        In the vacuum of space, sound can't travel, and ASL offers a silent, efficient solution. Astro ASL demonstrates how sign language enables clear communication between astronauts. Our platform uses a trained machine learning model to detect ASL signs in real time through webcam input. Powered by deep learning and computer vision, the system interprets gestures accurately and instantly, offering a quiet, intuitive way to communicate in space.
+      </h3>
     </div>
 
     <div class="divider"></div>
@@ -190,11 +194,7 @@
 
       <div class="divider"></div>
 
-      <div>
-        <button id="toggleCameraBtn" onclick="toggleCamera()">
-          Close Camera
-        </button>
-      </div>
+  
       <!-- Camera + Square Box Align Box -->
       <div class="camera-and-target">
         <div class="camera-container">
@@ -210,6 +210,12 @@
     </div>
 
     <div class="divider"></div>
+
+        <div>
+        <button id="toggleCameraBtn" onclick="toggleCamera()">
+          Close Camera
+        </button>
+      </div>
 
     <div class="section" id="fourth-section">
       <h1>Developers</h1>
@@ -328,7 +334,7 @@
     </div>
 
     <script>
-      s;
+      //s;
       // Text setting
       const subtitleLines = ["Experience how this can make our space💫 better"];
 
