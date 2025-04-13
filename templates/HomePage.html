@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>ASTRO ASL</title>
+    <!-- Google Fonts: Futuristic Style -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron&family=Rajdhani&family=Audiowide&family=Exo&family=Titillium+Web&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #010021;
+        color: white;
+        font-family: Arial, sans-serif;
+        overflow-x: hidden;
+        scroll-behavior: smooth;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: url("{{ url_for('static', filename='space_background.webp') }}");
+        background-size: 110% auto;
+        background-position: 0% 0%;
+        background-repeat: repeat-x;
+        opacity: 0.4;
+        z-index: -1;
+        animation: moveBackground 30s linear infinite;
+      }
+
+      @keyframes moveBackground {
+        0% {
+          background-position: 0% 0%;
+        }
+        100% {
+          background-position: 100% 0%;
+        }
+      }
+
+      .section {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 20px;
+        box-sizing: border-box;
+      }
+
+      .divider {
+        width: 100%;
+        max-width: 1514px;
+        height: 292px;
+        background: linear-gradient(
+          180deg,
+          rgba(11, 4, 30, 0.6) 11.06%,
+          rgba(1, 0, 33, 0) 100%
+        );
+        margin: 0 auto;
+      }
+
+      .section.hero h1,
+      .section.hero h3 {
+        transition: font-family 0.5s ease;
+      }
+
+      .section.hero h1 {
+        font-size: 4rem;
+        margin-bottom: 20px;
+      }
+
+      .section.hero h3 {
+        font-size: 1.5rem;
+        line-height: 1.6;
+        padding: 10px 20px;
+        border-radius: 10px;
+        min-height: 5em;
+      }
+
+      @keyframes fadeInUp {
+        0% {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .play-button {
+        width: 150px;
+        height: auto;
+        margin-top: -50px;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+        opacity: 0;
+        pointer-events: none;
+        display: block;
+      }
+
+      .play-button.fade-in {
+        animation: fadeInUp 1s ease-out forwards;
+        pointer-events: auto;
+      }
+
+      .play-button:hover {
+        transform: scale(1.1);
+      }
+
+      .information {
+      }
+
+      .camera-and-target {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 40px;
+        background: rgba(0, 0, 0, 0.5);
+        padding: 30px;
+        border-radius: 20px;
+      }
+
+      .camera-container,
+      .target-container {
+        padding: 0;
+        margin: 0;
+      }
+
+      .target-container img {
+        width: 730px;
+        height: 470px;
+        border: none;
+        border-radius: 0px;
+      }
+
+      video {
+        width: 640px;
+        height: 480px;
+        border: none;
+        border-radius: 50px;
+        transform: scaleX(-1);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- First Section -->
+    <div class="section hero">
+      <img
+        src="{{ url_for('static', filename='title.png') }}"
+        alt="Welcome Title"
+        style="display: block; margin: 0 auto; width: 65%; height: auto"
+      />
+      <h3 id="subtitle"></h3>
+      <img
+        id="play-button"
+        class="play-button"
+        src="{{ url_for('static', filename='play_button.png') }}"
+        alt="Play Button"
+      />
+    </div>
+
+    <div class="section" id="second-section">
+      <h1>
+        Purpose of Astro ASL <br />
+        <br />
+        <!--And How We Made It Happen !-->
+      </h1>
+
+      <h2>
+        No sound in space. No problem. American Sign Language is redefining
+        astronaut communication.
+      </h2>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Third Section with Camera -->
+    <div class="section" id="third-section">
+      <div id="camera-text"></div>
+      <div id="target-text"></div>
+
+      <div class="divider"></div>
+
+      <div>
+        <button id="toggleCameraBtn" onclick="toggleCamera()">
+          Close Camera
+        </button>
+      </div>
+      <!-- Camera + Square Box Align Box -->
+      <div class="camera-and-target">
+        <div class="camera-container">
+          <img id="camera" src="{{ url_for('video_feed') }}" />
+        </div>
+        <div class="target-container">
+          <img
+            src="{{ url_for('static', filename='target-square.png') }}"
+            alt="Target Square"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section" id="fourth-section">
+      <h1>Developers</h1>
+      <!--<h2 style="margin-bottom: 2rem">Meet the Team</h2>-->
+      <div
+        style="
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+          gap: 30px;
+          width: 100%;
+          max-width: 1000px;
+          margin: 0 auto;
+        "
+      >
+        <div
+          style="
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+          "
+        >
+          <img
+            src="https://via.placeholder.com/150"
+            alt="Dev 1"
+            style="
+              border-radius: 50%;
+              width: 100px;
+              height: 100px;
+              object-fit: cover;
+              margin-bottom: 10px;
+            "
+          />
+          <h3>Jay</h3>
+          <p>tba<br />Flask, OpenCV</p>
+        </div>
+
+        <div
+          style="
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+          "
+        >
+          <img
+            src="https://via.placeholder.com/150"
+            alt="Dev 2"
+            style="
+              border-radius: 50%;
+              width: 100px;
+              height: 100px;
+              object-fit: cover;
+              margin-bottom: 10px;
+            "
+          />
+          <h3>Isla</h3>
+          <p>tba<br />CSS, Animation</p>
+        </div>
+
+        <div
+          style="
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+          "
+        >
+          <img
+            src="https://via.placeholder.com/150"
+            alt="Dev 3"
+            style="
+              border-radius: 50%;
+              width: 100px;
+              height: 100px;
+              object-fit: cover;
+              margin-bottom: 10px;
+            "
+          />
+          <h3>Iracema</h3>
+          <p>Front/Back End Dev<br />Flask, OpenCV</p>
+        </div>
+
+        <div
+          style="
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+          "
+        >
+          <img
+            src="https://via.placeholder.com/150"
+            alt="Dev 4"
+            style="
+              border-radius: 50%;
+              width: 100px;
+              height: 100px;
+              object-fit: cover;
+              margin-bottom: 10px;
+            "
+          />
+          <h3>Owin</h3>
+          <p>tba<br />Flask, React</p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      s;
+      // Text setting
+      const subtitleLines = ["Experience how this can make our space💫 better"];
+
+      const subtitleElement = document.getElementById("subtitle");
+      const playButton = document.getElementById("play-button");
+
+      let subtitleIndex = 0;
+      let subtitleLineIndex = 0;
+
+      let isCameraOn = true;
+      const cameraImg = document.getElementById("camera");
+      const toggleBtn = document.getElementById("toggleCameraBtn");
+
+      function toggleCamera() {
+        if (isCameraOn) {
+          cameraImg.src = "";
+          toggleBtn.textContent = "Turn Camera On";
+        } else {
+          cameraImg.src = "{{ url_for('video_feed') }}";
+          toggleBtn.textContent = "Turn Camera Off";
+        }
+        isCameraOn = !isCameraOn;
+      }
+
+      // subtitle typing effect
+      function typeSubtitle() {
+        if (subtitleLineIndex < subtitleLines.length) {
+          if (subtitleIndex < subtitleLines[subtitleLineIndex].length) {
+            subtitleElement.innerHTML += subtitleLines[
+              subtitleLineIndex
+            ].charAt(subtitleIndex++);
+            setTimeout(typeSubtitle, 60);
+          } else {
+            subtitleElement.innerHTML += "<br>";
+            subtitleLineIndex++;
+            subtitleIndex = 0;
+            setTimeout(typeSubtitle, 500);
+          }
+        } else {
+          playButton.classList.add("fade-in");
+        }
+      }
+
+      typeSubtitle();
+
+      playButton.addEventListener("click", function () {
+        const thirdSection = document.getElementById("third-section");
+        thirdSection.scrollIntoView({ behavior: "smooth" });
+      });
+
+      // Access Webcam
+      navigator.mediaDevices
+        .getUserMedia({ video: true })
+        .then((stream) => {
+          const video = document.getElementById("camera");
+          video.srcObject = stream;
+        })
+        .catch((error) => {
+          console.error("Camera access error:", error);
+        });
+    </script>
+  </body>
+</html>
