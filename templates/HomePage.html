@@ -189,6 +189,15 @@
     .capture-button:hover {
       background: rgba(0, 255, 0, 0.5);
     }
+
+    .big-black-box {
+      background: black;
+      color: white;
+      border: 20px solid #535353;
+      width: 708px;
+      height: 470px;
+      border-radius: 60px;
+    }
   </style>
 </head>
 
@@ -229,7 +238,8 @@
         <button class="capture-button" id="capture-button">Start</button>
       </div>
       <div class="target-container">
-        <img src="{{ url_for('static', filename='target-square.png') }}" alt="Target Square" />
+        <div class="big-black-box" alt="Target Square">
+          <p>Text Here</p>
       </div>
     </div>
   </div>
@@ -260,7 +270,7 @@
 
     socket.on('prediction', (data) => {
       document.getElementById('prediction-letter').textContent = data.letter || '-';
-      document.getElementById('prediction-confidence').textContent = 
+      document.getElementById('prediction-confidence').textContent =
         data.confidence ? `${(data.confidence * 100).toFixed(1)}%` : '0%';
     });
 
@@ -296,7 +306,7 @@
       canvas.height = video.videoHeight;
       const ctx = canvas.getContext('2d');
       ctx.drawImage(video, 0, 0);
-      
+
       const base64Image = canvas.toDataURL('image/jpeg').split(',')[1];
       if (base64Image) {
         socket.emit('frame', base64Image);
