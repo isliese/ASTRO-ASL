@@ -121,10 +121,12 @@ This project uses the following technologies, libraries, and datasets:
 - **NumPy** – A library for numerical computing in Python.
 - **MediaPipe** – A library for real-time computer vision.
 
-### Slideshow:
- [Astro ASL Slideshow](https://docs.google.com/presentation/d/12n0f3zPviuIEXO6e-eKsDheuZ6P-uuRe7ssC2XmmU9Y/edit?usp=sharing)
-
 ### Dataset:
-- [American Sign Language Dataset](https://www.kaggle.com/datasets/ayuraj/american-sign-language-dataset) – A dataset used for training the the model.
+[American Sign Language Dataset](https://www.kaggle.com/datasets/ayuraj/american-sign-language-dataset) – A dataset used for training the the model.
+
+### Explore More:
+ [Astro ASL Slideshow](https://docs.google.com/presentation/d/12n0f3zPviuIEXO6e-eKsDheuZ6P-uuRe7ssC2XmmU9Y/edit?usp=sharing)
+ [Devpost Project Link](https://devpost.com/software/astro-asl?ref_content=my-projects-tab&ref_feature=my_projects)
+
 ## 📄 License
 © 2025 | AstroASL Team - Fullyhacks @ CSUF
