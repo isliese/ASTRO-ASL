@@ -5,7 +5,7 @@
 </p>
 
 # 🪐 FullyHacks 2025
-[FullyHacks](https://fullyhacks.acmcsuf.com/) is a 24-hour Hackathon at CSUF hosted by [ACM](https://acmcsuf.com/) 
+[FullyHacks](https://fullyhacks.acmcsuf.com/) is a 24-hour Hackathon at CSUF hosted by [ACMCSUF](https://acmcsuf.com/) 
 <div><img alt="FullyHacks logo" src="https://github.com/user-attachments/assets/5fbc4f4b-071a-4a9b-95af-d8bef0ceab10" width="200"></div>
 
 # 👽 ASTRO ASL
