@@ -1,10 +1,12 @@
-### **🏆 This project was awarded Best Technical at FullyHacks 2025 🏆**
+<p align="center">
+  <strong>🏆 This project was awarded Most Technical at FullyHacks 2025 🏆</strong>
+  <br>
+   <div><img alt="ASTRO ASL logo" src="https://github.com/user-attachments/assets/e89141a7-9766-471d-bcea-59eec2efe7cd"></div>
+</p>
 
-# 🪐 Fullyhacks 2025
-CSUF's largest 24-hour hackathon <br>
-Link: https://fullyhacks.acmcsuf.com/
-<div><img src="https://github.com/user-attachments/assets/4efcb867-c0f3-410c-8cc0-fcbc16697af0" width="200"></div>
-<br>
+# 🪐 FullyHacks 2025
+[FullyHacks](https://fullyhacks.acmcsuf.com/) is a 24-hour Hackathon at CSUF hosted by [ACM](https://acmcsuf.com/) 
+<div><img alt="FullyHacks logo" src="https://github.com/user-attachments/assets/5fbc4f4b-071a-4a9b-95af-d8bef0ceab10" width="200"></div>
 
 # 👽 ASTRO ASL
 No sound in space? No Problem. Real-time ASL recognition via deep learning 💫
@@ -38,7 +40,7 @@ Sound doesn’t travel in the vacuum of space, making traditional spoken communi
 | 🧠 Onboard ML     | No internet needed — edge processing for zero-latency use    |
 | 🧤 Glove Support* | Compatible with bulky astronaut gloves                       |
 | 📊 Scribe Logs*   | Automatically logs conversations for mission review          |
-| 🌌 Space-Ready    | Designed for zero-gravity and suit integration               |
+| 🌌 Space-Ready*   | Designed for zero-gravity and suit integration               |
 
 \* TBD (To Be Developed...)
 
@@ -112,21 +114,17 @@ This project uses the following technologies, libraries, and datasets:
 - **CSS**
 - **JS**
 
+### Libraries:
+- **Flask** – A micro web framework for Python.
+- **TensorFlow** – An open-source library for numerical computation and large-scale machine learning.
+- **Scikit-learn** – A machine learning library, used for building the Random Forest model.
+- **NumPy** – A library for numerical computing in Python.
+- **MediaPipe** – A library for real-time computer vision.
+
 ### Slideshow:
  [Astro ASL Slideshow](https://docs.google.com/presentation/d/12n0f3zPviuIEXO6e-eKsDheuZ6P-uuRe7ssC2XmmU9Y/edit?usp=sharing)
 
-### Libraries:
-- **Flask** – A micro web framework for Python.
-- **Tensorflow** – A Python library used for network packet manipulation.
-- **Scikit-learn** – A machine learning library, used for building the Random Forest model.
-- **NumPy** – A library for numerical computing in Python.
-
 ### Dataset:
 - [American Sign Language Dataset](https://www.kaggle.com/datasets/ayuraj/american-sign-language-dataset) – A dataset used for training the the model.
-
-### 🧠 Machine Learning Algorithm
-
-- **CNN** – Convolutional Neural Network (CNN) is a deep learning algorithm used for image classification tasks, implemented using TensorFlow and Keras.
-
 ## 📄 License
 © 2025 | AstroASL Team - Fullyhacks @ CSUF
