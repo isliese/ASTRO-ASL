@@ -1,4 +1,13 @@
+### **🏆 This project was awarded Best Technical at FullyHacks 2025 🏆**
+
+# 🪐 Fullyhacks 2025
+CSUF's largest 24-hour hackathon <br>
+Link: https://fullyhacks.acmcsuf.com/
+<div><img src="https://github.com/user-attachments/assets/4efcb867-c0f3-410c-8cc0-fcbc16697af0" width="200"></div>
+<br>
+
 # 👽 ASTRO ASL
+No sound in space? No Problem. Real-time ASL recognition via deep learning 💫
 
 ## 📝 Summary  
 **ASTRO ASL (American Sign Language)** is an AI-powered sign language transcriber designed specifically for space missions. By capturing and interpreting ASL gestures in real time, ASTRO ASL bridges communication gaps in environments where traditional audio communication fails.
