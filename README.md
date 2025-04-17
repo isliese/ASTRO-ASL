@@ -46,7 +46,7 @@ Sound doesn’t travel in the vacuum of space, making traditional spoken communi
 
 ## 🌟 How Are We Unique?  
 
-- **Tech Used**: TensorFlow, OpenCV, Mediapipe, Sci-kitlearn
+- **Tech Used**: TensorFlow, OpenCV, Mediapipe, Sci-kit learn
 - **Built for Space**: Engineered to work in zero-gravity and vacuum conditions  
 - **Offline AI**: Works without any internet connection, runs locally  
 - **Mission-Critical UX**: Simplified UI for high-pressure scenarios 
