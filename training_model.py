@@ -6,6 +6,7 @@ import tensorflow as tf
 import keras
 import kagglehub
 from sklearn.model_selection import train_test_split
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 # Download dataset from Kaggle
 path = kagglehub.dataset_download("ayuraj/american-sign-language-dataset")
@@ -17,7 +18,7 @@ data_dir = os.path.join(path, 'asl')  # Adjust if folder name differs
 print("Files in dataset path:", os.listdir(path))  # Debugging line
 
 # Define the percentage of data to sample
-sample_percentage = 0.1  # 0.5% of the data
+sample_percentage = 0.1  # Using 10% of the data
 
 # Function to sample a percentage of data
 def sample_data(data_dir, sample_percentage):
@@ -46,7 +47,6 @@ def sample_data(data_dir, sample_percentage):
 
     return sampled_data_dir
 
-# Sample the data
 data_dir = sample_data(data_dir, sample_percentage)
 
 # Check if the data directory exists
@@ -66,28 +66,26 @@ def load_data(data_dir, add_noise=False):
     label_map = {}  # To map gestures to integer labels
 
     for folder_name in os.listdir(data_dir):
-        if folder_name == 'asl' or not folder_name.isalpha() or len(folder_name) != 1: # Only consider folders with single-letter names
+        if folder_name == 'asl' or not folder_name.isalpha() or len(folder_name) != 1:
             continue
 
         folder_path = os.path.join(data_dir, folder_name)
         
         if os.path.isdir(folder_path):
             for img_name in os.listdir(folder_path):
-                # Only consider .jpg or .jpeg files
                 if img_name.endswith('.jpg') or img_name.endswith('.jpeg'):
                     img_path = os.path.join(folder_path, img_name)
                     img = cv2.imread(img_path)
+                    if img is None:
+                        continue
                     img = cv2.resize(img, (224, 224))
+                    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)  # Convert to RGB
 
-                    # Extract the label (first letter of the filename)
                     label = folder_name.lower()
 
-
-                    # Convert label to integer if not already mapped
                     if label not in label_map:
                         label_map[label] = len(label_map)
 
-                    # Optionally add noise
                     if add_noise:
                         img = add_gaussian_noise(img)
 
@@ -115,33 +113,80 @@ print(f"Number of classes: {len(label_map)}")
 print(f"Training samples: {len(X_train)}")
 print(f"Testing samples: {len(X_test)}")
 
-# Define the model
+# Create data augmentation generator
+datagen = ImageDataGenerator(
+    rotation_range=20,
+    width_shift_range=0.2,
+    height_shift_range=0.2,
+    shear_range=0.2,
+    zoom_range=0.2,
+    horizontal_flip=True,
+    fill_mode='nearest'
+)
+
+# Define the model with improved architecture
 model = keras.Sequential([
     keras.layers.Input(shape=(224, 224, 3)),
-    keras.layers.Conv2D(32, (3, 3), activation='relu'),
+    keras.layers.Conv2D(32, (3, 3), activation='relu', padding='same'),
+    keras.layers.BatchNormalization(),
     keras.layers.MaxPooling2D((2, 2)),
-    keras.layers.Conv2D(64, (3, 3), activation='relu'),
+    keras.layers.Dropout(0.25),
+    
+    keras.layers.Conv2D(64, (3, 3), activation='relu', padding='same'),
+    keras.layers.BatchNormalization(),
     keras.layers.MaxPooling2D((2, 2)),
-    keras.layers.Conv2D(128, (3, 3), activation='relu'),
+    keras.layers.Dropout(0.25),
+    
+    keras.layers.Conv2D(128, (3, 3), activation='relu', padding='same'),
+    keras.layers.BatchNormalization(),
     keras.layers.MaxPooling2D((2, 2)),
+    keras.layers.Dropout(0.25),
+    
+    keras.layers.Conv2D(256, (3, 3), activation='relu', padding='same'),
+    keras.layers.BatchNormalization(),
+    keras.layers.MaxPooling2D((2, 2)),
+    keras.layers.Dropout(0.25),
+    
     keras.layers.Flatten(),
-    keras.layers.Dropout(0.3),
-    keras.layers.Dense(128, activation='relu'),
+    keras.layers.Dense(512, activation='relu'),
+    keras.layers.BatchNormalization(),
+    keras.layers.Dropout(0.5),
     keras.layers.Dense(len(label_map), activation='softmax')
 ])
 
-# Compile the model
-model.compile(optimizer='adam',
+# Compile the model with learning rate scheduling
+initial_learning_rate = 0.001
+lr_schedule = keras.optimizers.schedules.ExponentialDecay(
+    initial_learning_rate,
+    decay_steps=1000,
+    decay_rate=0.9,
+    staircase=True
+)
+
+optimizer = keras.optimizers.Adam(learning_rate=lr_schedule)
+
+model.compile(optimizer=optimizer,
               loss='categorical_crossentropy',
               metrics=['accuracy'])
 
-# Train the model
-model.fit(X_train, y_train, epochs=5, batch_size=32, validation_data=(X_test, y_test))
+# Add early stopping
+early_stopping = keras.callbacks.EarlyStopping(
+    monitor='val_loss',
+    patience=5,
+    restore_best_weights=True
+)
+
+# Train the model with data augmentation
+history = model.fit(
+    datagen.flow(X_train, y_train, batch_size=32),
+    epochs=30,
+    validation_data=(X_test, y_test),
+    callbacks=[early_stopping]
+)
 
 # Evaluate the model
 loss, accuracy = model.evaluate(X_test, y_test)
 print(f"Test accuracy: {accuracy:.3f}")
-
 print(f"Test loss: {loss:.3f}")
 
 # Save the model
