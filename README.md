@@ -50,45 +50,59 @@ Sound doesn’t travel in the vacuum of space, making traditional spoken communi
 - **Built for Space**: Engineered to work in zero-gravity and vacuum conditions  
 - **Offline AI**: Works without any internet connection, runs locally  
 - **Mission-Critical UX**: Simplified UI for high-pressure scenarios 
+I can't create a file directly, but you can copy and paste the following content into a file and save it as `README.md`:
 
-## 🚀 Steps to Use
-1. **Clone Repository**:
-   ```bash
-   git clone git@github.com:isliese/astro-asl
-   cd astro-asl
-   ```
+# 🚀 Steps to Use
 
-2. **Set Up Environment**:
-   ```bash
-   python3 -m venv venv
-   source venv/bin/activate  # Linux/macOS
-   .\venv\Scripts\activate   # Windows
-   ```
-   
-3. **Install Dependencies**:
-   ```bash
-   # Ensure Python > 3.10 < 3.11 is installed
-   pip install -r requirements.txt
-   ```
-4. **Train Model**
-   ```bash
-   # Using your own dataset, you can train your model using:
-   # Only tested using dataset below. May require customization
-   # for custom datasets.
-   # https://www.kaggle.com/datasets/ayuraj/american-sign-language-dataset
-   python training_model.py
-   ```
-6. **Run Application**:
-   ```bash
-   python app.py # for web UI and transcriber
-   ```
+## 1️⃣ Clone Repository
+Ensure you have Git installed on your system. Then, clone the repository and navigate into the project folder:
+
+```bash
+git clone https://github.com/isliese/astro-asl.git
+cd astro-asl
+```
+
+## 2️⃣ Set Up Environment
+Create and activate a virtual environment to manage dependencies.
+
+### macOS/Linux:
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+### Windows:
+```cmd
+python -m venv venv
+venv\Scripts\activate
+```
+
+## 3️⃣ Install Dependencies
+```bash
+pip install -r requirements.txt
+```
+
+## 4️⃣ Train the Model
+
+```bash
+python training_model.py
+```
+
+⚠️ **Note:** Custom datasets may require modifications to the training script.
+
+## 5️⃣ Run the Application
+Launch the web UI and transcriber:
+
+```bash
+python app.py
+```
 
 ## 🔍 Troubleshooting
 | Issue | Solution |
 |-------|----------|
-| Performance Slowdowns | Ensure efficient use of system resources |
-| False Positives/Negatives | Strengthen model to reduce overfitting |
-| Installation Issues | Verify Python version and dependencies |
+| Performance Slowdowns | Close programs or increase memory allocation |
+| False Positives/Negatives | Remove neural net layers to reduce overfitting |
+| Installation Issues | Verify Python version is 3.10-3.11 and install dependencies |
 
 ## 🤝 Contributing
 We welcome contributions! Please follow these steps:
