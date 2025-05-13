@@ -5,7 +5,7 @@
 </p>
 
 # 🪐 FullyHacks 2025
-[FullyHacks](https://fullyhacks.acmcsuf.com/) is a 24-hour Hackathon at CSUF hosted by [ACM](https://acmcsuf.com/) 
+[FullyHacks](https://fullyhacks.acmcsuf.com/) is the largest 24-hour Hackathon at CSUF hosted by [ACMCSUF](https://acmcsuf.com/) 
 <div><img alt="FullyHacks logo" src="https://github.com/user-attachments/assets/5fbc4f4b-071a-4a9b-95af-d8bef0ceab10" width="200"></div>
 
 # 👽 ASTRO ASL
@@ -46,7 +46,7 @@ Sound doesn’t travel in the vacuum of space, making traditional spoken communi
 
 ## 🌟 How Are We Unique?  
 
-- **Tech Used**: TensorFlow, OpenCV, Mediapipe, Sci-kitlearn
+- **Tech Used**: TensorFlow, OpenCV, Mediapipe, Scikit-learn
 - **Built for Space**: Engineered to work in zero-gravity and vacuum conditions  
 - **Offline AI**: Works without any internet connection, runs locally  
 - **Mission-Critical UX**: Simplified UI for high-pressure scenarios 
@@ -99,10 +99,10 @@ We welcome contributions! Please follow these steps:
 ## 👥 Team
 | Role | Member |
 |------|--------|
-| Backend | Owin |
-| Backend | Jay |
-| Frontend | Isla |
-| Frontend | Sema |
+| Backend / Research | Owin |
+| Backend / Research | Jay |
+| Frontend / Design | Isla |
+| Frontend / Design | Sema |
 
 ## 🙏 Credits  
 
@@ -121,10 +121,12 @@ This project uses the following technologies, libraries, and datasets:
 - **NumPy** – A library for numerical computing in Python.
 - **MediaPipe** – A library for real-time computer vision.
 
-### Slideshow:
- [Astro ASL Slideshow](https://docs.google.com/presentation/d/12n0f3zPviuIEXO6e-eKsDheuZ6P-uuRe7ssC2XmmU9Y/edit?usp=sharing)
-
 ### Dataset:
-- [American Sign Language Dataset](https://www.kaggle.com/datasets/ayuraj/american-sign-language-dataset) – A dataset used for training the the model.
+[American Sign Language Dataset](https://www.kaggle.com/datasets/ayuraj/american-sign-language-dataset) – A dataset used for training the the model.
+
+### Explore More:
+ [Astro ASL Slideshow](https://docs.google.com/presentation/d/12n0f3zPviuIEXO6e-eKsDheuZ6P-uuRe7ssC2XmmU9Y/edit?usp=sharing) <br>
+ [Devpost Project Link](https://devpost.com/software/astro-asl?ref_content=my-projects-tab&ref_feature=my_projects)
+
 ## 📄 License
 © 2025 | AstroASL Team - Fullyhacks @ CSUF
