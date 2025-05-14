@@ -50,7 +50,6 @@ Sound doesn’t travel in the vacuum of space, making traditional spoken communi
 - **Built for Space**: Engineered to work in zero-gravity and vacuum conditions  
 - **Offline AI**: Works without any internet connection, runs locally  
 - **Mission-Critical UX**: Simplified UI for high-pressure scenarios 
-I can't create a file directly, but you can copy and paste the following content into a file and save it as `README.md`:
 
 # 🚀 Steps to Use
 
