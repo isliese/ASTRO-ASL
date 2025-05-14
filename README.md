@@ -38,11 +38,7 @@ Sound doesn’t travel in the vacuum of space, making traditional spoken communi
 |-------------------|--------------------------------------------------------------|
 | 🤖 AI Recognition | Real-time ASL interpretation via onboard camera systems      |
 | 🧠 Onboard ML     | No internet needed — edge processing for zero-latency use    |
-| 🧤 Glove Support* | Compatible with bulky astronaut gloves                       |
-| 📊 Scribe Logs*   | Automatically logs conversations for mission review          |
-| 🌌 Space-Ready*   | Designed for zero-gravity and suit integration               |
-
-\* TBD (To Be Developed...)
+| 📊 Scribe Logs   | Automatically logs conversations for mission review          |
 
 ## 🌟 How Are We Unique?  
 
@@ -103,6 +99,12 @@ python app.py
 | False Positives/Negatives | Remove neural net layers to reduce overfitting |
 | Installation Issues | Verify Python version is 3.10-3.11 and install dependencies |
 
+### 🚧 Limitations
+- **Model Efficiency** - Model is not future proofed and may be overreliant on dataset.
+- **Hand Isolation** - To have a clean image of the gesture, the hand must be isolated.
+- **Lighting Requirement** - To be recognized by the model, the hand must be in good lighting as well.
+
+
 ## 🤝 Contributing
 We welcome contributions! Please follow these steps:
 1. Fork the repository
@@ -133,7 +135,6 @@ This project uses the following technologies, libraries, and datasets:
 - **Scikit-learn** – A machine learning library, used for building the Random Forest model.
 - **NumPy** – A library for numerical computing in Python.
 - **MediaPipe** – A library for real-time computer vision.
-
 ### Dataset:
 [American Sign Language Dataset](https://www.kaggle.com/datasets/ayuraj/american-sign-language-dataset) – A dataset used for training the the model.
 
