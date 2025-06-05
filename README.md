@@ -80,7 +80,7 @@ pip install -r requirements.txt
 ## 4️⃣ Train the Model
 
 ```bash
-python training-model.py
+python training_model.py
 ```
 
 ⚠️ **Note:** Custom datasets may require modifications to the training script.
