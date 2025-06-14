@@ -110,8 +110,6 @@ This project uses the following technologies, libraries, and datasets:
 
 ### Languages:
 - **Python**
-- **HTML**
-- **CSS**
 - **JS**
 
 ### Libraries:
