@@ -1,7 +1,20 @@
 <p align="center">
+  <img alt="GitHub License" src="https://img.shields.io/github/license/isliese/ASTRO-ASL">
+  <img src="https://img.shields.io/badge/Flask-000?logo=flask&amp;logoColor=fff" alt="Flask">
+  <img src="https://img.shields.io/badge/HTML-%23E34F26.svg?logo=html5&amp;logoColor=white" alt="HTML">
+  <img src="https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&amp;logoColor=000" alt="JavaScript">
+  <img src="https://img.shields.io/badge/CSS-639?logo=css&amp;logoColor=fff" alt="CSS">
+  <img src="https://img.shields.io/badge/Python-3776AB?logo=python&amp;logoColor=fff" alt="Python">
+  <img src="https://img.shields.io/badge/TensorFlow-ff8f00?logo=tensorflow&amp;logoColor=white" alt="TensorFlow">
+  <img src="https://img.shields.io/badge/MediaPipe-0097A7?logo=mediapipe&amp;logoColor=fff" alt="MediaPipe">
+  <img src="https://img.shields.io/badge/-scikit--learn-%23F7931E?logo=scikit-learn&amp;logoColor=white" alt="Scikit-learn">
+  <img src="https://img.shields.io/badge/NumPy-4DABCF?logo=numpy&amp;logoColor=fff" alt="NumPy">
+  <img src="https://img.shields.io/badge/Vercel-%23000000.svg?logo=vercel&amp;logoColor=white" alt="Vercel">
+  
+  <br><br>
   <strong>🏆 This project was awarded Most Technical at FullyHacks 2025 🏆</strong>
   <br>
-   <div><img alt="ASTRO ASL logo" src="https://github.com/user-attachments/assets/e89141a7-9766-471d-bcea-59eec2efe7cd"></div>
+  <div><img alt="ASTRO ASL logo" src="https://github.com/user-attachments/assets/e89141a7-9766-471d-bcea-59eec2efe7cd"></div>
 </p>
 
 # 🪐 FullyHacks 2025
